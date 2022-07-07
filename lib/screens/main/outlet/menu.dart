@@ -30,84 +30,83 @@ class _OutletMenuState extends State<OutletMenu> {
       ) {
         outletItems = itemsProvider.getOutletItems(widget.outlet);
 
-        return Stack(
+        return ListView(
+          padding: EdgeInsets.zero,
+          physics: const BouncingScrollPhysics(),
           children: [
-            ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 32),
-              physics: const BouncingScrollPhysics(),
-              children: [
-                const SizedBox(height: 110),
-                const TextHeader(text: 'Menu'),
-                const SizedBox(height: 12),
-                ...outletItems.keys
-                    .map(
-                      (key) => mainCategoryItems(
-                        key,
-                        outletItems[key]!,
+            Container(
+              height: 110,
+              padding: const EdgeInsets.fromLTRB(24, 34, 24, 0),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    radius: 24,
+                    backgroundColor: Colors.transparent,
+                    child: IconButton(
+                      splashRadius: 28,
+                      onPressed: () => Navigator.pop(context),
+                      icon: FaIcon(
+                        FontAwesomeIcons.arrowLeft,
+                        size: 18,
+                        color: Theme.of(context).primaryColorDark,
                       ),
-                    )
-                    .toList(),
-              ],
-            ),
-            Positioned(
-              top: 48,
-              left: 24,
-              child: CircleAvatar(
-                radius: 24,
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                child: IconButton(
-                  splashRadius: 28,
-                  onPressed: () => Navigator.pop(context),
-                  icon: FaIcon(
-                    FontAwesomeIcons.arrowLeft,
-                    size: 18,
-                    color: Theme.of(context).primaryColorDark,
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              top: 48,
-              right: 24,
-              child: CircleAvatar(
-                radius: 24,
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                child: IconButton(
-                  splashRadius: 28,
-                  onPressed: () => showCustomModalBottomSheet(
-                    context: context,
-                    builder: (context) => buildFilterMenu(
-                      context,
-                      itemsProvider,
                     ),
-                    containerWidget: (
-                      BuildContext context,
-                      Animation<double> animation,
-                      Widget child,
-                    ) {
-                      return SafeArea(
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                            left: 32,
-                            right: 32,
-                            bottom: 32,
-                          ),
-                          child: Material(
-                            clipBehavior: Clip.antiAlias,
-                            borderRadius: BorderRadius.circular(12),
-                            child: child,
-                          ),
+                  ),
+                  const Spacer(),
+                  CircleAvatar(
+                    radius: 24,
+                    backgroundColor: Colors.transparent,
+                    child: IconButton(
+                      splashRadius: 28,
+                      onPressed: () => showCustomModalBottomSheet(
+                        context: context,
+                        builder: (context) => buildFilterMenu(
+                          context,
+                          itemsProvider,
                         ),
-                      );
-                    },
-                  ),
-                  icon: FaIcon(
-                    FontAwesomeIcons.barsStaggered,
-                    color: Theme.of(context).primaryColorDark,
-                  ),
-                ),
+                        containerWidget: (
+                          BuildContext context,
+                          Animation<double> animation,
+                          Widget child,
+                        ) {
+                          return SafeArea(
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                left: 32,
+                                right: 32,
+                                bottom: 32,
+                              ),
+                              child: Material(
+                                clipBehavior: Clip.antiAlias,
+                                borderRadius: BorderRadius.circular(12),
+                                child: child,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      icon: FaIcon(
+                        FontAwesomeIcons.barsStaggered,
+                        color: Theme.of(context).primaryColorDark,
+                      ),
+                    ),
+                  )
+                ],
               ),
             ),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24),
+              child: TextHeader(text: 'Menu'),
+            ),
+            const SizedBox(height: 12),
+            ...outletItems.keys
+                .map(
+                  (key) => mainCategoryItems(
+                    key,
+                    outletItems[key]!,
+                  ),
+                )
+                .toList(),
           ],
         );
       },
@@ -119,16 +118,28 @@ Widget mainCategoryItems(String catName, List<OutletItem> itemList) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      TextSubHeader(catName),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        child: TextSubHeader(catName),
+      ),
       const SizedBox(height: 16),
-      ...itemList
-          .map(
-            (outletItem) => ItemTile(
-              item: outletItem.item,
-              isAvailable: outletItem.isAvailable,
-            ),
-          )
-          .toList(),
+      SizedBox(
+        height: 224,
+        child: ListView(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          children: [
+            ...itemList
+                .map(
+                  (outletItem) => ItemCard(
+                    item: outletItem.item,
+                    isAvailable: outletItem.isAvailable,
+                  ),
+                )
+                .toList(),
+          ],
+        ),
+      ),
       const SizedBox(height: 24)
     ],
   );
@@ -215,7 +226,7 @@ Widget buildFilterMenu(BuildContext context, ItemsProvider itemsProvider) {
                 color: itemsProvider.mainFilter.isEmpty &&
                         itemsProvider.subFilter.isEmpty
                     ? Theme.of(context).backgroundColor
-                    : Theme.of(context).colorScheme.primary,
+                    : Theme.of(context).colorScheme.primary.withAlpha(20),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),

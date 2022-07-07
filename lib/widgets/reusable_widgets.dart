@@ -64,7 +64,7 @@ class RoundedOutlineInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: padding ?? const EdgeInsets.all(0),
+      padding: padding ?? EdgeInsets.zero,
       child: TextFormField(
         controller: controller,
         obscureText: obscureText,

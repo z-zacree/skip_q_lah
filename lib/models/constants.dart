@@ -34,7 +34,7 @@ class ThemeProvider {
     ),
     listTileTheme: ListTileThemeData(
       selectedColor: Colors.black,
-      selectedTileColor: AppColors.peachCrayola,
+      selectedTileColor: AppColors.peachCrayola.withAlpha(40),
     ),
   );
 
@@ -58,7 +58,7 @@ class ThemeProvider {
     ),
     listTileTheme: ListTileThemeData(
       selectedColor: Colors.white,
-      selectedTileColor: AppColors.charcoal,
+      selectedTileColor: AppColors.charcoal.withAlpha(40),
     ),
   );
 }

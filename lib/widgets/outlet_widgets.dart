@@ -88,8 +88,8 @@ Widget indicator(Outlet outlet) {
   );
 }
 
-class ItemTile extends StatelessWidget {
-  const ItemTile({Key? key, required this.isAvailable, required this.item})
+class ItemCard extends StatelessWidget {
+  const ItemCard({Key? key, required this.isAvailable, required this.item})
       : super(key: key);
 
   final Item item;
@@ -97,32 +97,57 @@ class ItemTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12.0),
-      child: ListTile(
-        dense: true,
-        tileColor: Theme.of(context).colorScheme.primary.withAlpha(20),
-        contentPadding: const EdgeInsets.fromLTRB(8, 8, 16, 8),
+    return Container(
+      margin: const EdgeInsets.all(10),
+      width: 146,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(20),
         onTap: () {},
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        title: Text(
-          item.name,
-          overflow: TextOverflow.fade,
-          maxLines: 1,
-          softWrap: false,
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        trailing: Text(item.getPrice()),
-        leading: Container(
-          width: 48,
-          height: 48,
-          clipBehavior: Clip.antiAliasWithSaveLayer,
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
-          child: Image.network(
-            item.displayImage,
-            fit: BoxFit.cover,
+        child: Card(
+          margin: EdgeInsets.zero,
+          elevation: 0,
+          color: Theme.of(context).colorScheme.primary.withAlpha(30),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            children: [
+              Container(
+                width: 96,
+                height: 96,
+                margin: const EdgeInsets.symmetric(vertical: 16),
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Image.network(
+                  item.displayImage,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Text(
+                  item.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.fade,
+                  textAlign: TextAlign.center,
+                  softWrap: false,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const Spacer(),
+              Text(
+                item.getPrice(),
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(
+                height: 16,
+              )
+            ],
           ),
         ),
       ),
