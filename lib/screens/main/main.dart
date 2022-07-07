@@ -23,6 +23,7 @@ class _MainHomePageState extends State<MainHomePage> {
       onWillPop: () async => false,
       child: Scaffold(
         body: PageView(
+          physics: pageIndex == 1 ? const NeverScrollableScrollPhysics() : null,
           controller: _pageController,
           onPageChanged: ((value) {
             setState(() => pageIndex = value);

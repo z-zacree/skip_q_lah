@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:skip_q_lah/models/firestore/collections/item.dart';
 import 'package:skip_q_lah/models/firestore/collections/outlet.dart';
+import 'package:skip_q_lah/models/providers/items.dart';
 import 'package:skip_q_lah/widgets/reusable_widgets.dart';
 
 class OutletTile extends StatelessWidget {
@@ -33,7 +35,6 @@ class OutletTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       tileColor: Theme.of(context).colorScheme.primary.withAlpha(20),
-      style: ListTileStyle.list,
       contentPadding: const EdgeInsets.all(10),
       onTap: () => Navigator.pushNamed(context, '/details', arguments: outlet),
       shape: RoundedRectangleBorder(
@@ -85,4 +86,46 @@ Widget indicator(Outlet outlet) {
       ),
     ),
   );
+}
+
+class ItemTile extends StatelessWidget {
+  const ItemTile({Key? key, required this.isAvailable, required this.item})
+      : super(key: key);
+
+  final Item item;
+  final bool isAvailable;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12.0),
+      child: ListTile(
+        dense: true,
+        tileColor: Theme.of(context).colorScheme.primary.withAlpha(20),
+        contentPadding: const EdgeInsets.fromLTRB(8, 8, 16, 8),
+        onTap: () {},
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        title: Text(
+          item.name,
+          overflow: TextOverflow.fade,
+          maxLines: 1,
+          softWrap: false,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        trailing: Text(item.getPrice()),
+        leading: Container(
+          width: 48,
+          height: 48,
+          clipBehavior: Clip.antiAliasWithSaveLayer,
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
+          child: Image.network(
+            item.displayImage,
+            fit: BoxFit.cover,
+          ),
+        ),
+      ),
+    );
+  }
 }

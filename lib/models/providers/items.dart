@@ -29,7 +29,8 @@ class ItemsProvider extends ChangeNotifier {
   }
 
   List<Item> itemList = [];
-  Categories filterCategories = Categories(main: [], sub: []);
+  List<String> mainFilter = [];
+  List<String> subFilter = [];
   SortOrder sortBy = SortOrder.nameAscending;
 
   List<OutletItem> getItems(Outlet outlet) {
@@ -50,49 +51,54 @@ class ItemsProvider extends ChangeNotifier {
   Categories getCategories() {
     Categories categories = Categories(main: [], sub: []);
 
+    List<String> mainCategories = categories.main;
+    List<String> subCategories = categories.sub;
+
     for (var item in itemList) {
-      if (!categories.main.contains(item.categories.main)) {
-        categories.main.add(item.categories.main);
+      if (!mainCategories.contains(item.categories.main)) {
+        mainCategories.add(item.categories.main);
       }
 
       for (var subCat in item.categories.sub) {
-        if (!categories.sub.contains(subCat)) {
-          categories.sub.add(subCat);
+        if (!subCategories.contains(subCat)) {
+          subCategories.add(subCat);
         }
       }
     }
 
-    return categories;
+    return categories.sorted();
   }
 
   Map<String, List<OutletItem>> getOutletItems(Outlet outlet) {
     Map<String, List<OutletItem>> outletItemList = {};
-    Categories categories = getCategories();
+    Categories categories = Categories(
+      main: mainFilter.isEmpty ? getCategories().main : mainFilter,
+      sub: subFilter.isEmpty ? getCategories().sub : subFilter,
+    );
     List<OutletItem> outletItems = getItems(outlet);
-
-    categories.filterOut(filterCategories);
 
     for (String mainCat in categories.main) {
       List<OutletItem> itemList = [];
-      for (OutletItem oi in outletItems) {
-        if (oi.item.categories.main == mainCat) itemList.add(oi);
+
+      for (OutletItem outletItem in outletItems) {
+        String oIMain = outletItem.item.categories.main;
+        List<String> oISub = outletItem.item.categories.sub;
+
+        if (oIMain == mainCat &&
+            oISub.any(
+              (element) => categories.sub.contains(element),
+            )) itemList.add(outletItem);
       }
 
       switch (sortBy) {
         case SortOrder.nameAscending:
-          itemList.sort(
-            (a, b) => a.item.name.compareTo(b.item.name),
-          );
+          itemList.sort((a, b) => a.item.name.compareTo(b.item.name));
           break;
         case SortOrder.priceAscending:
-          itemList.sort(
-            (a, b) => a.item.price.compareTo(b.item.price),
-          );
+          itemList.sort((a, b) => a.item.price.compareTo(b.item.price));
           break;
         case SortOrder.priceDescending:
-          itemList.sort(
-            (a, b) => b.item.price.compareTo(a.item.price),
-          );
+          itemList.sort((a, b) => b.item.price.compareTo(a.item.price));
           break;
       }
 
@@ -114,11 +120,21 @@ class ItemsProvider extends ChangeNotifier {
     return sortBy == sortOrder;
   }
 
-  void setFilter(String filter) {
-    if (filterCategories.main.contains(filter)) {
-      filterCategories.main.removeWhere((_filter) => _filter == filter);
+  void setMainFilter(String filter) {
+    if (mainFilter.contains(filter)) {
+      mainFilter.removeWhere((_filter) => _filter == filter);
     } else {
-      filterCategories.main.add(filter);
+      mainFilter.add(filter);
+    }
+
+    notifyListeners();
+  }
+
+  void setSubFilter(String filter) {
+    if (subFilter.contains(filter)) {
+      subFilter.removeWhere((_filter) => _filter == filter);
+    } else {
+      subFilter.add(filter);
     }
 
     notifyListeners();
@@ -141,6 +157,13 @@ class Categories {
     for (var subCat in categories.sub) {
       sub.removeWhere((cat) => cat == subCat);
     }
+  }
+
+  Categories sorted() {
+    main.sort();
+    sub.sort();
+
+    return this;
   }
 
   bool isEmpty() {

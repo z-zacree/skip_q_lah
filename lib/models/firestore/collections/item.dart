@@ -26,6 +26,10 @@ class Item {
   }
 
   Map<String, dynamic> toJson() => _$ItemToJson(this);
+
+  String getPrice() {
+    return '\$' + price.toStringAsFixed(2);
+  }
 }
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)

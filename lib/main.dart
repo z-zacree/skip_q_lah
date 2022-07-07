@@ -1,6 +1,5 @@
 import 'package:skip_q_lah/firebase_options.dart';
 import 'package:skip_q_lah/models/providers/items.dart';
-import 'package:skip_q_lah/models/providers/menu.dart';
 import 'package:skip_q_lah/models/providers/user_details.dart';
 import 'package:skip_q_lah/screens/auth/additional_details.dart';
 import 'package:skip_q_lah/screens/auth/sign_in.dart';
@@ -31,7 +30,6 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider.value(value: UserDetailsProvider()),
         ChangeNotifierProvider.value(value: ItemsProvider()),
-        ChangeNotifierProvider.value(value: MenuProvider()),
       ],
       child: ThemeMaterial(
         initRoute: '/auth',

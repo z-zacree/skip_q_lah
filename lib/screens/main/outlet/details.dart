@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:skip_q_lah/models/firestore/collections/outlet.dart';
+import 'package:skip_q_lah/screens/main/outlet/menu.dart';
 import 'package:skip_q_lah/widgets/outlet_widgets.dart';
 import 'package:skip_q_lah/widgets/reusable_widgets.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -45,10 +46,13 @@ class _OutletDetailState extends State<OutletDetail> {
               color: Theme.of(context).backgroundColor,
               child: ElevatedButton(
                 onPressed: outlet.isOpen()
-                    ? () => Navigator.pushNamed(
+                    ? () => Navigator.push(
                           context,
-                          '/menu',
-                          arguments: outlet,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return OutletMenu(outlet: outlet);
+                            },
+                          ),
                         )
                     : null,
                 child: Text(outlet.isOpen() ? 'Order Here' : 'Closed'),
@@ -66,6 +70,7 @@ class _OutletDetailState extends State<OutletDetail> {
             left: 24,
             top: 48,
             child: CircleAvatar(
+              radius: 24,
               backgroundColor: Theme.of(context).backgroundColor,
               child: IconButton(
                 splashRadius: 28,

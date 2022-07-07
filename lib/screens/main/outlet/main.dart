@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:skip_q_lah/screens/main/outlet/details.dart';
 import 'package:skip_q_lah/screens/main/outlet/listing.dart';
-import 'package:skip_q_lah/screens/main/outlet/menu.dart';
 import 'package:skip_q_lah/widgets/theme_material.dart';
 
 class OutletListPage extends StatefulWidget {
@@ -22,7 +21,6 @@ class _OutletListPageState extends State<OutletListPage>
       routes: {
         '/list': (context) => const OutletListing(),
         '/details': (context) => const OutletDetail(),
-        '/menu': (context) => const OutletMenu(),
       },
     );
   }
