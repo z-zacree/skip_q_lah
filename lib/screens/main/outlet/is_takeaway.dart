@@ -7,16 +7,20 @@ import 'package:skip_q_lah/screens/main/outlet/menu.dart';
 import 'package:skip_q_lah/widgets/reusable_widgets.dart';
 
 class IsTakeaway extends StatefulWidget {
-  const IsTakeaway({Key? key}) : super(key: key);
+  const IsTakeaway({Key? key, required this.outlet}) : super(key: key);
+
+  final Outlet outlet;
 
   @override
   State<IsTakeaway> createState() => _IsTakeawayState();
 }
 
 class _IsTakeawayState extends State<IsTakeaway> {
+  late Outlet outlet;
+
   @override
   Widget build(BuildContext context) {
-    final Outlet outlet = ModalRoute.of(context)!.settings.arguments as Outlet;
+    outlet = widget.outlet;
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
 

@@ -1,8 +1,13 @@
 import 'package:skip_q_lah/models/constants.dart';
+import 'package:skip_q_lah/screens/auth/additional_details.dart';
+import 'package:skip_q_lah/screens/auth/sign_in.dart';
+import 'package:skip_q_lah/screens/auth/sign_up.dart';
+import 'package:skip_q_lah/screens/main/main.dart';
 import 'package:skip_q_lah/widgets/reusable_widgets.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_fadein/flutter_fadein.dart';
+import 'package:swipeable_page_route/swipeable_page_route.dart';
 
 class MainAuthPage extends StatefulWidget {
   const MainAuthPage({Key? key}) : super(key: key);
@@ -15,14 +20,6 @@ class _MainAuthPageState extends State<MainAuthPage> {
   FadeInController googleButton = FadeInController();
   FadeInController emailButton = FadeInController();
   FadeInController anonButton = FadeInController();
-
-  void navigate(String? routeName) {
-    Navigator.pushNamed(context, "/$routeName");
-  }
-
-  void navigateUntil(String? routeName) {
-    Navigator.pushNamedAndRemoveUntil(context, '/$routeName', (route) => false);
-  }
 
   @override
   void initState() {
@@ -76,7 +73,13 @@ class _MainAuthPageState extends State<MainAuthPage> {
                   'Log in with Google',
                   style: TextStyle(color: Colors.black),
                 ),
-                onPressed: () => navigateUntil('userDetails'),
+                onPressed: () => Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return const UserDetailsPage();
+                  }),
+                  (route) => false,
+                ),
                 style: ElevatedButton.styleFrom(
                   elevation: 2,
                   shape: RoundedRectangleBorder(
@@ -101,7 +104,12 @@ class _MainAuthPageState extends State<MainAuthPage> {
                   'Log in with Email',
                   style: TextStyle(color: Colors.black),
                 ),
-                onPressed: () => navigate('signIn'),
+                onPressed: () => Navigator.push(
+                  context,
+                  SwipeablePageRoute(builder: (context) {
+                    return const SignInPage();
+                  }),
+                ),
                 style: ElevatedButton.styleFrom(
                   elevation: 2,
                   shape: RoundedRectangleBorder(
@@ -125,7 +133,13 @@ class _MainAuthPageState extends State<MainAuthPage> {
                   'Continue anonymously',
                   style: TextStyle(color: Theme.of(context).primaryColorLight),
                 ),
-                onPressed: () => navigateUntil('main'),
+                onPressed: () => Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return const MainHomePage();
+                  }),
+                  (route) => false,
+                ),
                 style: ElevatedButton.styleFrom(
                   elevation: 2,
                   shape: RoundedRectangleBorder(
@@ -149,7 +163,14 @@ class _MainAuthPageState extends State<MainAuthPage> {
                         color: Theme.of(context).primaryColor,
                       ),
                       recognizer: TapGestureRecognizer()
-                        ..onTap = () => navigate('signUp'),
+                        ..onTap = () => Navigator.push(
+                              context,
+                              SwipeablePageRoute(
+                                builder: (context) {
+                                  return const SignUpPage();
+                                },
+                              ),
+                            ),
                     )
                   ],
                 ),

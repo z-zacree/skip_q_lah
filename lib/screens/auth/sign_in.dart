@@ -1,3 +1,4 @@
+import 'package:skip_q_lah/screens/main/main.dart';
 import 'package:skip_q_lah/widgets/reusable_widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -10,12 +11,6 @@ class SignInPage extends StatefulWidget {
 
 class _SignInPageState extends State<SignInPage> {
   final GlobalKey<FormState> _signInForm = GlobalKey<FormState>();
-
-  void back() => Navigator.pop(context);
-
-  void navigate(String? routeName) {
-    Navigator.pushNamed(context, "/$routeName");
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +61,13 @@ class _SignInPageState extends State<SignInPage> {
               SecondaryButton(
                 onPressed: () {
                   if (_signInForm.currentState!.validate()) {
-                    navigate('main');
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) {
+                        return const MainHomePage();
+                      }),
+                      (route) => false,
+                    );
                   }
                 },
                 child: const Text('Sign in'),

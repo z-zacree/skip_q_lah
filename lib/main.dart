@@ -2,11 +2,8 @@ import 'package:skip_q_lah/firebase_options.dart';
 import 'package:skip_q_lah/models/providers/items.dart';
 import 'package:skip_q_lah/models/providers/order.dart';
 import 'package:skip_q_lah/models/providers/user_details.dart';
-import 'package:skip_q_lah/screens/auth/additional_details.dart';
-import 'package:skip_q_lah/screens/auth/sign_in.dart';
-import 'package:skip_q_lah/screens/auth/sign_up.dart';
 import 'package:skip_q_lah/screens/auth/main.dart';
-import 'package:skip_q_lah/screens/main/main.dart';
+import 'package:skip_q_lah/screens/main/home/main.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -27,6 +24,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isSignedIn = false;
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: UserDetailsProvider()),
@@ -34,14 +32,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: OrderProvider()),
       ],
       child: ThemeMaterial(
-        initRoute: '/auth',
-        routes: {
-          '/auth': (context) => const MainAuthPage(),
-          '/signIn': (context) => const SignInPage(),
-          '/signUp': (context) => const SignUpPage(),
-          '/userDetails': (context) => const UserDetailsPage(),
-          '/main': (context) => const MainHomePage(),
-        },
+        initPage: isSignedIn ? const HomePage() : const MainAuthPage(),
       ),
     );
   }

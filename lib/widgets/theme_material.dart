@@ -6,12 +6,10 @@ import 'package:skip_q_lah/models/constants.dart';
 class ThemeMaterial extends StatelessWidget {
   const ThemeMaterial({
     Key? key,
-    required this.initRoute,
-    required this.routes,
+    required this.initPage
   }) : super(key: key);
 
-  final String initRoute;
-  final Map<String, WidgetBuilder> routes;
+  final Widget initPage;
 
   final List<ThemeMode> themeModes = const [
     ThemeMode.system,
@@ -31,8 +29,7 @@ class ThemeMaterial extends StatelessWidget {
           theme: ThemeProvider.lightTheme,
           darkTheme: ThemeProvider.darkTheme,
           themeMode: themeModes[themeMode],
-          initialRoute: initRoute,
-          routes: routes,
+          home: initPage,
         );
       },
     );

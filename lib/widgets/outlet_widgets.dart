@@ -5,6 +5,7 @@ import 'package:skip_q_lah/models/constants.dart';
 import 'package:skip_q_lah/models/firestore/collections/item.dart';
 import 'package:skip_q_lah/models/firestore/collections/outlet.dart';
 import 'package:skip_q_lah/models/providers/order.dart';
+import 'package:skip_q_lah/screens/main/outlet/details.dart';
 import 'package:skip_q_lah/widgets/reusable_widgets.dart';
 
 class OutletTile extends StatelessWidget {
@@ -39,7 +40,12 @@ class OutletTile extends StatelessWidget {
     return ListTile(
       tileColor: Theme.of(context).colorScheme.primary.withAlpha(20),
       contentPadding: const EdgeInsets.all(10),
-      onTap: () => Navigator.pushNamed(context, '/details', arguments: outlet),
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) {
+          return OutletDetail(outlet: outlet);
+        }),
+      ),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18),
       ),

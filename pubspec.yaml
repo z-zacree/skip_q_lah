@@ -51,6 +51,7 @@ dependencies:
     google_maps_flutter: ^2.1.8
     google_place: ^0.4.7
     modal_bottom_sheet: ^2.0.1
+    swipeable_page_route: ^0.2.6
 
 dev_dependencies:
     flutter_test:

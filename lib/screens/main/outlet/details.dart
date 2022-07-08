@@ -4,22 +4,26 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:skip_q_lah/models/firestore/collections/outlet.dart';
 import 'package:skip_q_lah/models/providers/order.dart';
-import 'package:skip_q_lah/screens/main/outlet/menu.dart';
+import 'package:skip_q_lah/screens/main/outlet/is_takeaway.dart';
 import 'package:skip_q_lah/widgets/outlet_widgets.dart';
 import 'package:skip_q_lah/widgets/reusable_widgets.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class OutletDetail extends StatefulWidget {
-  const OutletDetail({Key? key}) : super(key: key);
+  const OutletDetail({Key? key, required this.outlet}) : super(key: key);
+
+  final Outlet outlet;
 
   @override
   State<OutletDetail> createState() => _OutletDetailState();
 }
 
 class _OutletDetailState extends State<OutletDetail> {
+  late Outlet outlet;
+
   @override
   Widget build(BuildContext context) {
-    final Outlet outlet = ModalRoute.of(context)!.settings.arguments as Outlet;
+    outlet = widget.outlet;
 
     return Consumer<OrderProvider>(
       builder: (
@@ -57,10 +61,11 @@ class _OutletDetailState extends State<OutletDetail> {
                     onPressed: outlet.isOpen()
                         ? () {
                             orderProvider.order.outletId = outlet.id;
-                            Navigator.pushNamed(
+                            Navigator.push(
                               context,
-                              '/isTakeaway',
-                              arguments: outlet,
+                              MaterialPageRoute(builder: (context) {
+                                return IsTakeaway(outlet: outlet);
+                              }),
                             );
                           }
                         : null,

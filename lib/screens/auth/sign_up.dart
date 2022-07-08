@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:skip_q_lah/screens/main/main.dart';
 import 'package:skip_q_lah/widgets/reusable_widgets.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -10,12 +11,6 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   final GlobalKey<FormState> _signUpForm = GlobalKey<FormState>();
-
-  void back() => Navigator.pop(context);
-
-  void navigateUntil(String? routeName) {
-    Navigator.pushNamedAndRemoveUntil(context, "/$routeName", (route) => false);
-  }
 
   TextEditingController password = TextEditingController();
   TextEditingController confirmPassword = TextEditingController();
@@ -84,7 +79,13 @@ class _SignUpPageState extends State<SignUpPage> {
               SecondaryButton(
                 onPressed: () {
                   if (_signUpForm.currentState!.validate()) {
-                    navigateUntil('userDetails');
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) {
+                        return const MainHomePage();
+                      }),
+                      (route) => false,
+                    );
                   }
                 },
                 child: const Text('Sign up'),

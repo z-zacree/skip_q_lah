@@ -1,4 +1,5 @@
 import 'package:skip_q_lah/models/providers/user_details.dart';
+import 'package:skip_q_lah/screens/main/main.dart';
 import 'package:skip_q_lah/widgets/reusable_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -18,9 +19,13 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
   String nnDisplay = 'Skip';
   String fnDisplay = 'Skip';
 
-  void navigateToMain() {
-    Navigator.pushNamedAndRemoveUntil(context, '/main', (route) => false);
-  }
+  void navigateToMain() => Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) {
+          return const MainHomePage();
+        }),
+        (route) => false,
+      );
 
   @override
   Widget build(BuildContext context) {

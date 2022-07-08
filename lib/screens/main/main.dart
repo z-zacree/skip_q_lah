@@ -37,11 +37,15 @@ class _MainHomePageState extends State<MainHomePage> {
           ],
         ),
         bottomNavigationBar: SalomonBottomBar(
-          onTap: (int index) => _pageController.animateToPage(
-            index,
-            curve: Curves.easeInCubic,
-            duration: const Duration(milliseconds: 400),
-          ),
+          onTap: (int index) {
+            if (index != pageIndex) {
+              _pageController.animateToPage(
+                index,
+                curve: Curves.easeInCubic,
+                duration: const Duration(milliseconds: 400),
+              );
+            }
+          },
           currentIndex: pageIndex,
           items: [
             SalomonBottomBarItem(
