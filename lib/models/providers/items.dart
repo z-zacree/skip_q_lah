@@ -102,6 +102,12 @@ class ItemsProvider extends ChangeNotifier {
           break;
       }
 
+      itemList.sort(((a, b) {
+        if (a.isAvailable) return -1;
+        if (b.isAvailable) return 1;
+        return 0;
+      }));
+
       outletItemList.update(
         mainCat,
         (value) => itemList,

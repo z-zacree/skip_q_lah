@@ -76,7 +76,7 @@ class Outlet {
       }
     }
 
-    return true;
+    return checks.contains(true);
   }
 }
 

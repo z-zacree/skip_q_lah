@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:skip_q_lah/models/firestore/collections/outlet.dart';
+import 'package:skip_q_lah/models/providers/order.dart';
 import 'package:skip_q_lah/screens/main/outlet/menu.dart';
 import 'package:skip_q_lah/widgets/outlet_widgets.dart';
 import 'package:skip_q_lah/widgets/reusable_widgets.dart';
@@ -19,72 +21,81 @@ class _OutletDetailState extends State<OutletDetail> {
   Widget build(BuildContext context) {
     final Outlet outlet = ModalRoute.of(context)!.settings.arguments as Outlet;
 
-    return Scaffold(
-      body: Stack(
-        children: [
-          SlidingUpPanel(
-            maxHeight: MediaQuery.of(context).size.height * 0.6,
-            minHeight: 100,
-            parallaxEnabled: true,
-            parallaxOffset: 0.55,
-            color: Theme.of(context).backgroundColor,
-            borderRadius: const BorderRadius.vertical(
-              top: Radius.circular(20),
-            ),
-            panelBuilder: (ScrollController scrollController) => PanelWidget(
-              scrollController: scrollController,
-              outlet: outlet,
-            ),
-            body: MapWidget(outlet: outlet),
-          ),
-          Positioned(
-            bottom: 0,
-            left: 12,
-            right: 12,
-            child: Container(
-              padding: const EdgeInsets.only(bottom: 12),
-              color: Theme.of(context).backgroundColor,
-              child: ElevatedButton(
-                onPressed: outlet.isOpen()
-                    ? () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return OutletMenu(outlet: outlet);
-                            },
-                          ),
-                        )
-                    : null,
-                child: Text(outlet.isOpen() ? 'Order Here' : 'Closed'),
-                style: ElevatedButton.styleFrom(
-                  elevation: 4,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(6.0),
+    return Consumer<OrderProvider>(
+      builder: (
+        BuildContext context,
+        OrderProvider orderProvider,
+        Widget? child,
+      ) {
+        return Scaffold(
+          body: Stack(
+            children: [
+              SlidingUpPanel(
+                maxHeight: MediaQuery.of(context).size.height * 0.6,
+                minHeight: 100,
+                parallaxEnabled: true,
+                parallaxOffset: 0.55,
+                color: Theme.of(context).backgroundColor,
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(20),
+                ),
+                panelBuilder: (ScrollController scrollController) =>
+                    PanelWidget(
+                  scrollController: scrollController,
+                  outlet: outlet,
+                ),
+                body: MapWidget(outlet: outlet),
+              ),
+              Positioned(
+                bottom: 0,
+                left: 12,
+                right: 12,
+                child: Container(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  color: Theme.of(context).backgroundColor,
+                  child: ElevatedButton(
+                    onPressed: outlet.isOpen()
+                        ? () {
+                            orderProvider.order.outletId = outlet.id;
+                            Navigator.pushNamed(
+                              context,
+                              '/isTakeaway',
+                              arguments: outlet,
+                            );
+                          }
+                        : null,
+                    child: Text(outlet.isOpen() ? 'Order Here' : 'Closed'),
+                    style: ElevatedButton.styleFrom(
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6.0),
+                      ),
+                      minimumSize: const Size(double.infinity, 50),
+                    ),
                   ),
-                  minimumSize: const Size(double.infinity, 50),
                 ),
               ),
-            ),
-          ),
-          Positioned(
-            left: 24,
-            top: 48,
-            child: CircleAvatar(
-              radius: 24,
-              backgroundColor: Theme.of(context).backgroundColor,
-              child: IconButton(
-                splashRadius: 28,
-                onPressed: () => Navigator.pop(context),
-                icon: FaIcon(
-                  FontAwesomeIcons.arrowLeft,
-                  size: 18,
-                  color: Theme.of(context).primaryColorDark,
+              Positioned(
+                left: 24,
+                top: 48,
+                child: CircleAvatar(
+                  radius: 24,
+                  backgroundColor: Theme.of(context).backgroundColor,
+                  child: IconButton(
+                    splashRadius: 28,
+                    onPressed: () => Navigator.pop(context),
+                    icon: FaIcon(
+                      FontAwesomeIcons.arrowLeft,
+                      size: 18,
+                      color: Theme.of(context).primaryColorDark,
+                    ),
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

@@ -4,7 +4,7 @@ part 'item.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
 class Item {
-  final String id, name, displayImage;
+  final String id, name, displayImage, additionalInfo;
   final double price;
   final List<String> availableAt;
   final ItemCategories categories;
@@ -13,6 +13,7 @@ class Item {
     required this.id,
     required this.name,
     required this.displayImage,
+    required this.additionalInfo,
     required this.price,
     required this.availableAt,
     required this.categories,
@@ -22,6 +23,7 @@ class Item {
 
   factory Item.fromFire(String id, Map<String, dynamic> json) {
     json['id'] = id;
+    json['additional_info'] = '';
     return Item.fromJson(json);
   }
 

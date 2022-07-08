@@ -3,8 +3,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:skip_q_lah/models/constants.dart';
+import 'package:skip_q_lah/models/firestore/collections/item.dart';
 import 'package:skip_q_lah/models/firestore/collections/outlet.dart';
 import 'package:skip_q_lah/models/providers/items.dart';
+import 'package:skip_q_lah/models/providers/order.dart';
+import 'package:skip_q_lah/screens/main/order/confirm.dart';
 import 'package:skip_q_lah/widgets/outlet_widgets.dart';
 import 'package:skip_q_lah/widgets/reusable_widgets.dart';
 
@@ -22,91 +25,123 @@ class _OutletMenuState extends State<OutletMenu> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ItemsProvider>(
+    return Consumer2<ItemsProvider, OrderProvider>(
       builder: (
         BuildContext context,
         ItemsProvider itemsProvider,
+        OrderProvider orderProvider,
         Widget? child,
       ) {
         outletItems = itemsProvider.getOutletItems(widget.outlet);
 
-        return ListView(
-          padding: EdgeInsets.zero,
-          physics: const BouncingScrollPhysics(),
+        return Stack(
           children: [
-            Container(
-              height: 110,
-              padding: const EdgeInsets.fromLTRB(24, 34, 24, 0),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 24,
-                    backgroundColor: Colors.transparent,
-                    child: IconButton(
-                      splashRadius: 28,
-                      onPressed: () => Navigator.pop(context),
-                      icon: FaIcon(
-                        FontAwesomeIcons.arrowLeft,
-                        size: 18,
-                        color: Theme.of(context).primaryColorDark,
-                      ),
-                    ),
-                  ),
-                  const Spacer(),
-                  CircleAvatar(
-                    radius: 24,
-                    backgroundColor: Colors.transparent,
-                    child: IconButton(
-                      splashRadius: 28,
-                      onPressed: () => showCustomModalBottomSheet(
-                        context: context,
-                        builder: (context) => buildFilterMenu(
-                          context,
-                          itemsProvider,
+            ListView(
+              padding: EdgeInsets.fromLTRB(
+                  24, 0, 24, orderProvider.order.itemList.isEmpty ? 0 : 32),
+              physics: const BouncingScrollPhysics(),
+              children: [
+                Container(
+                  height: 110,
+                  padding: const EdgeInsets.only(top: 34),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 24,
+                        backgroundColor: Colors.transparent,
+                        child: IconButton(
+                          splashRadius: 28,
+                          onPressed: () {
+                            orderProvider.resetOrder();
+                            Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              '/list',
+                              (_) => false,
+                            );
+                          },
+                          icon: FaIcon(
+                            FontAwesomeIcons.xmark,
+                            size: 24,
+                            color: Theme.of(context).primaryColorDark,
+                          ),
                         ),
-                        containerWidget: (
-                          BuildContext context,
-                          Animation<double> animation,
-                          Widget child,
-                        ) {
-                          return SafeArea(
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                left: 32,
-                                right: 32,
-                                bottom: 32,
-                              ),
-                              child: Material(
-                                clipBehavior: Clip.antiAlias,
-                                borderRadius: BorderRadius.circular(12),
-                                child: child,
-                              ),
+                      ),
+                      const Spacer(),
+                      CircleAvatar(
+                        radius: 24,
+                        backgroundColor: Colors.transparent,
+                        child: IconButton(
+                          splashRadius: 28,
+                          onPressed: () => showCustomModalBottomSheet(
+                            context: context,
+                            builder: (context) => buildFilterMenu(
+                              context,
+                              itemsProvider,
                             ),
-                          );
-                        },
-                      ),
-                      icon: FaIcon(
-                        FontAwesomeIcons.barsStaggered,
-                        color: Theme.of(context).primaryColorDark,
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24),
-              child: TextHeader(text: 'Menu'),
-            ),
-            const SizedBox(height: 12),
-            ...outletItems.keys
-                .map(
-                  (key) => mainCategoryItems(
-                    key,
-                    outletItems[key]!,
+                            containerWidget: (
+                              BuildContext context,
+                              Animation<double> animation,
+                              Widget child,
+                            ) {
+                              return SafeArea(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 32,
+                                    right: 32,
+                                    bottom: 32,
+                                  ),
+                                  child: Material(
+                                    clipBehavior: Clip.antiAlias,
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: child,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                          icon: FaIcon(
+                            FontAwesomeIcons.barsStaggered,
+                            color: Theme.of(context).primaryColorDark,
+                          ),
+                        ),
+                      )
+                    ],
                   ),
-                )
-                .toList(),
+                ),
+                const TextHeader(text: 'Menu'),
+                const SizedBox(height: 12),
+                ...outletItems.keys
+                    .map(
+                      (key) => mainCategoryItems(
+                        key,
+                        outletItems[key]!,
+                      ),
+                    )
+                    .toList(),
+              ],
+            ),
+            Positioned(
+              bottom: orderProvider.order.itemList.isNotEmpty ? 0 : -50,
+              left: 20,
+              right: 20,
+              child: ElevatedButton(
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: ((context) {
+                      return const ConfirmOrderPage();
+                    }),
+                  ),
+                ),
+                child: const Text('Confirm Order'),
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  fixedSize: const Size(double.infinity, 50),
+                ),
+              ),
+            )
           ],
         );
       },
@@ -118,28 +153,16 @@ Widget mainCategoryItems(String catName, List<OutletItem> itemList) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        child: TextSubHeader(catName),
-      ),
+      TextSubHeader(catName),
       const SizedBox(height: 16),
-      SizedBox(
-        height: 224,
-        child: ListView(
-          shrinkWrap: true,
-          scrollDirection: Axis.horizontal,
-          children: [
-            ...itemList
-                .map(
-                  (outletItem) => ItemCard(
-                    item: outletItem.item,
-                    isAvailable: outletItem.isAvailable,
-                  ),
-                )
-                .toList(),
-          ],
-        ),
-      ),
+      ...itemList
+          .map(
+            (outletItem) => ItemTile(
+              item: outletItem.item,
+              isAvailable: outletItem.isAvailable,
+            ),
+          )
+          .toList(),
       const SizedBox(height: 24)
     ],
   );
