@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:skip_q_lah/models/firestore/main.dart';
 
 class UserDetailsProvider extends ChangeNotifier {
   String username = '';
@@ -17,17 +19,16 @@ class UserDetailsProvider extends ChangeNotifier {
   }
 
   void submitProcess({required Function callback}) {
-    // CFS cloudFirestore = CFS();
-
     final user = <String, dynamic>{
       'username': username,
       'full name': fullName,
       'mobile number': mobileNumber,
     };
 
-    debugPrint(user.toString());
-
-    // cloudFirestore.addUser(user);
+    FirestoreService().setUserDetails(
+      data: user,
+      uid: FirebaseAuth.instance.currentUser!.uid,
+    );
 
     callback();
   }

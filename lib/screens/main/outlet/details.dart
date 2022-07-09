@@ -8,6 +8,7 @@ import 'package:skip_q_lah/screens/main/outlet/is_takeaway.dart';
 import 'package:skip_q_lah/widgets/outlet_widgets.dart';
 import 'package:skip_q_lah/widgets/reusable_widgets.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:swipeable_page_route/swipeable_page_route.dart';
 
 class OutletDetail extends StatefulWidget {
   const OutletDetail({Key? key, required this.outlet}) : super(key: key);
@@ -58,18 +59,21 @@ class _OutletDetailState extends State<OutletDetail> {
                   padding: const EdgeInsets.only(bottom: 12),
                   color: Theme.of(context).backgroundColor,
                   child: ElevatedButton(
-                    onPressed: outlet.isOpen()
+                    onPressed: outlet.isOpen
                         ? () {
-                            orderProvider.order.outletId = outlet.id;
+                            orderProvider.beginNewOrder(outlet);
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) {
-                                return IsTakeaway(outlet: outlet);
-                              }),
+                              SwipeablePageRoute(
+                                canOnlySwipeFromEdge: true,
+                                builder: (context) {
+                                  return IsTakeaway(outlet: outlet);
+                                },
+                              ),
                             );
                           }
                         : null,
-                    child: Text(outlet.isOpen() ? 'Order Here' : 'Closed'),
+                    child: Text(outlet.isOpen ? 'Order Here' : 'Closed'),
                     style: ElevatedButton.styleFrom(
                       elevation: 4,
                       shape: RoundedRectangleBorder(

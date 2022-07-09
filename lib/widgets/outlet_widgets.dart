@@ -55,7 +55,7 @@ class OutletTile extends StatelessWidget {
         maxLines: 1,
         softWrap: false,
       ),
-      subtitle: isOutletAvailable(outlet.isOpen()),
+      subtitle: isOutletAvailable(outlet.isOpen),
       leading: Container(
         width: 56,
         height: 56,
@@ -90,7 +90,7 @@ Widget indicator(Outlet outlet) {
       width: 8,
       height: 8,
       decoration: BoxDecoration(
-        color: outlet.isOpen() ? Colors.green : Colors.red,
+        color: outlet.isOpen ? Colors.green : Colors.red,
         shape: BoxShape.circle,
       ),
     ),
@@ -193,8 +193,9 @@ class _ItemDetailsState extends State<ItemDetails> {
         Widget? child,
       ) {
         return Container(
-          margin:
-              EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.15),
+          margin: EdgeInsets.only(
+            top: MediaQuery.of(context).size.height * 0.15,
+          ),
           decoration: BoxDecoration(
             color: Theme.of(context).backgroundColor,
             borderRadius: const BorderRadius.only(

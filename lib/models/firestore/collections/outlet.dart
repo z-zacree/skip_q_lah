@@ -8,7 +8,7 @@ part 'outlet.g.dart';
 @LatLngSerializer()
 class Outlet {
   final String id, name, contactNumber, displayImage, description;
-
+  final bool isOpen;
   final List<Period> openingHours;
   final Address address;
   final LatLng latLng;
@@ -19,6 +19,7 @@ class Outlet {
     required this.contactNumber,
     required this.displayImage,
     required this.description,
+    required this.isOpen,
     required this.openingHours,
     required this.address,
     required this.latLng,
@@ -35,49 +36,6 @@ class Outlet {
   }
 
   Map<String, dynamic> toJson() => _$OutletToJson(this);
-
-  bool isOpen() {
-    DateTime currentDateTime = DateTime.now();
-
-    int currentDay = currentDateTime.weekday;
-
-    List<Period> checkPeriods = openingHours.where((Period period) {
-      return period.open.day == currentDay || period.close.day == currentDay;
-    }).toList();
-
-    List<bool> checks = [];
-
-    for (Period checkPeriod in checkPeriods) {
-      DateTime openDateTime = DateTime(
-        currentDateTime.year,
-        currentDateTime.month,
-        checkPeriod.open.day == currentDay
-            ? currentDateTime.day
-            : currentDateTime.day - 1,
-        int.parse(checkPeriod.open.time.substring(0, 2)),
-        int.parse(checkPeriod.open.time.substring(2, 4)),
-      );
-
-      DateTime closeDateTime = DateTime(
-        currentDateTime.year,
-        currentDateTime.month,
-        checkPeriod.close.day == currentDay
-            ? currentDateTime.day
-            : currentDateTime.day + 1,
-        int.parse(checkPeriod.close.time.substring(0, 2)),
-        int.parse(checkPeriod.close.time.substring(2, 4)),
-      );
-
-      if (currentDateTime.compareTo(openDateTime) == 1 &&
-          currentDateTime.compareTo(closeDateTime) == -1) {
-        checks.add(true);
-      } else {
-        checks.add(false);
-      }
-    }
-
-    return checks.contains(true);
-  }
 }
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)

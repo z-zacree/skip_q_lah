@@ -12,6 +12,7 @@ Outlet _$OutletFromJson(Map<String, dynamic> json) => Outlet(
       contactNumber: json['contact_number'] as String,
       displayImage: json['display_image'] as String,
       description: json['description'] as String,
+      isOpen: json['is_open'] as bool,
       openingHours: (json['opening_hours'] as List<dynamic>)
           .map((e) => Period.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -25,6 +26,7 @@ Map<String, dynamic> _$OutletToJson(Outlet instance) => <String, dynamic>{
       'contact_number': instance.contactNumber,
       'display_image': instance.displayImage,
       'description': instance.description,
+      'is_open': instance.isOpen,
       'opening_hours': instance.openingHours.map((e) => e.toJson()).toList(),
       'address': instance.address.toJson(),
       'lat_lng': const LatLngSerializer().toJson(instance.latLng),

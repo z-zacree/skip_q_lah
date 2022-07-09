@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:skip_q_lah/models/auth/main.dart';
 import 'package:skip_q_lah/models/constants.dart';
 import 'package:skip_q_lah/screens/auth/additional_details.dart';
 import 'package:skip_q_lah/screens/auth/sign_in.dart';
@@ -73,13 +75,20 @@ class _MainAuthPageState extends State<MainAuthPage> {
                   'Log in with Google',
                   style: TextStyle(color: Colors.black),
                 ),
-                onPressed: () => Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) {
-                    return const UserDetailsPage();
-                  }),
-                  (route) => false,
-                ),
+                onPressed: () async {
+                  Map<String, dynamic> userCredential =
+                      await AuthenticationService().signInWithGoogle();
+                  debugPrint(userCredential['code']);
+                  if (userCredential['user'] != null) {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) {
+                        return const UserDetailsPage();
+                      }),
+                      (route) => false,
+                    );
+                  }
+                },
                 style: ElevatedButton.styleFrom(
                   elevation: 2,
                   shape: RoundedRectangleBorder(
@@ -106,9 +115,12 @@ class _MainAuthPageState extends State<MainAuthPage> {
                 ),
                 onPressed: () => Navigator.push(
                   context,
-                  SwipeablePageRoute(builder: (context) {
-                    return const SignInPage();
-                  }),
+                  SwipeablePageRoute(
+                    canOnlySwipeFromEdge: true,
+                    builder: (context) {
+                      return const SignInPage();
+                    },
+                  ),
                 ),
                 style: ElevatedButton.styleFrom(
                   elevation: 2,
@@ -166,6 +178,7 @@ class _MainAuthPageState extends State<MainAuthPage> {
                         ..onTap = () => Navigator.push(
                               context,
                               SwipeablePageRoute(
+                                canOnlySwipeFromEdge: true,
                                 builder: (context) {
                                   return const SignUpPage();
                                 },

@@ -1,3 +1,4 @@
+import 'package:skip_q_lah/models/auth/main.dart';
 import 'package:skip_q_lah/screens/main/main.dart';
 import 'package:skip_q_lah/widgets/reusable_widgets.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,9 @@ class SignInPage extends StatefulWidget {
 
 class _SignInPageState extends State<SignInPage> {
   final GlobalKey<FormState> _signInForm = GlobalKey<FormState>();
+
+  final TextEditingController email = TextEditingController();
+  final TextEditingController password = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +49,7 @@ class _SignInPageState extends State<SignInPage> {
                   }
                   return null;
                 },
+                controller: email,
               ),
               const SizedBox(height: 20),
               RoundedOutlineInput(
@@ -56,18 +61,32 @@ class _SignInPageState extends State<SignInPage> {
                   return null;
                 },
                 obscureText: true,
+                controller: password,
               ),
               const SizedBox(height: 24),
               SecondaryButton(
-                onPressed: () {
+                onPressed: () async {
                   if (_signInForm.currentState!.validate()) {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(builder: (context) {
-                        return const MainHomePage();
-                      }),
-                      (route) => false,
-                    );
+                    await AuthenticationService()
+                        .emailSignIn(
+                      email: email.text.trim(),
+                      password: password.text.trim(),
+                    )
+                        .then((res) {
+                      if (res['code'] == 'sign-in-success') {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) {
+                            return const MainHomePage();
+                          }),
+                          (route) => false,
+                        );
+                      } else {
+                        email.text = '';
+                        password.text = '';
+                        _signInForm.currentState!.validate();
+                      }
+                    });
                   }
                 },
                 child: const Text('Sign in'),

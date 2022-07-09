@@ -38,39 +38,41 @@ class _OutletMenuState extends State<OutletMenu> {
         return Stack(
           children: [
             Positioned.fill(
-              child: ListView(
+              child: SingleChildScrollView(
                 padding: EdgeInsets.fromLTRB(
                   24,
                   169,
                   24,
-                  orderProvider.order.itemList.isEmpty ? 0 : 32,
+                  orderProvider.order!.itemList.isEmpty ? 0 : 32,
                 ),
                 physics: const BouncingScrollPhysics(),
-                children: [
-                  ...outletItems.keys
-                      .map(
-                        (key) => mainCategoryItems(
-                          key,
-                          outletItems[key]!,
-                        ),
-                      )
-                      .toList(),
-                ],
+                child: Column(
+                  children: [
+                    ...outletItems.keys
+                        .map(
+                          (key) => mainCategoryItems(
+                            key,
+                            outletItems[key]!,
+                          ),
+                        )
+                        .toList(),
+                  ],
+                ),
               ),
             ),
             Positioned(
               top: 0,
-              left: 24,
-              right: 24,
-              child: Container(
-                height: 153,
+              left: 0,
+              right: 0,
+              child: Material(
                 color: Theme.of(context).backgroundColor,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
                       height: 110,
-                      padding: const EdgeInsets.only(top: 34),
+                      padding:
+                          const EdgeInsets.only(top: 34, left: 24, right: 24),
                       child: Row(
                         children: [
                           CircleAvatar(
@@ -137,11 +139,14 @@ class _OutletMenuState extends State<OutletMenu> {
                         ],
                       ),
                     ),
-                    const Text(
-                      'Menu',
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 24),
+                      child: Text(
+                        'Menu',
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -156,7 +161,7 @@ class _OutletMenuState extends State<OutletMenu> {
               ),
             ),
             Positioned(
-              bottom: orderProvider.order.itemList.isNotEmpty ? 0 : -50,
+              bottom: orderProvider.order!.itemList.isNotEmpty ? 0 : -50,
               left: 20,
               right: 20,
               child: ElevatedButton(

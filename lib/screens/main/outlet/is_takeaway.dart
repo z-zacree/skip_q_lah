@@ -67,7 +67,7 @@ class _IsTakeawayState extends State<IsTakeaway> {
                         ),
                       ),
                       onPressed: () {
-                        orderProvider.order.isTakeaway = true;
+                        orderProvider.order!.isTakeaway = true;
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -88,7 +88,7 @@ class _IsTakeawayState extends State<IsTakeaway> {
                         ),
                       ),
                       onPressed: () {
-                        orderProvider.order.isTakeaway = false;
+                        orderProvider.order!.isTakeaway = false;
                         Navigator.push(
                           context,
                           MaterialPageRoute(

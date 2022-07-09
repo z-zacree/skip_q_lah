@@ -29,4 +29,11 @@ class FirestoreService {
     }
     return outletList;
   }
+
+  void setUserDetails({
+    required String uid,
+    required Map<String, dynamic> data,
+  }) {
+    fs.collection('users').doc(uid).set(data);
+  }
 }
