@@ -21,8 +21,8 @@ class UserDetailsProvider extends ChangeNotifier {
   void submitProcess({required Function callback}) {
     final user = <String, dynamic>{
       'username': username,
-      'full name': fullName,
-      'mobile number': mobileNumber,
+      'full_name': fullName,
+      'mobile_number': mobileNumber,
     };
 
     FirestoreService().setUserDetails(

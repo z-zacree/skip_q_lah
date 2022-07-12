@@ -17,7 +17,8 @@ Outlet _$OutletFromJson(Map<String, dynamic> json) => Outlet(
           .map((e) => Period.fromJson(e as Map<String, dynamic>))
           .toList(),
       address: Address.fromJson(json['address'] as Map<String, dynamic>),
-      latLng: const LatLngSerializer().fromJson(json['lat_lng'] as LatLng),
+      latLng: const LatLngSerializer()
+          .fromJson(json['lat_lng'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$OutletToJson(Outlet instance) => <String, dynamic>{

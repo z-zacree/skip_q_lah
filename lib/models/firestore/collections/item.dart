@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:skip_q_lah/models/constants.dart';
 
 part 'item.g.dart';
 
@@ -9,7 +10,7 @@ class Item {
   final List<String> availableAt;
   final ItemCategories categories;
 
-  Item({
+  const Item({
     required this.id,
     required this.name,
     required this.displayImage,
@@ -19,15 +20,15 @@ class Item {
     required this.categories,
   });
 
-  factory Item.fromJson(Map<String, dynamic> json) => _$ItemFromJson(json);
+  factory Item.fromJson(JsonResponse json) => _$ItemFromJson(json);
 
-  factory Item.fromFire(String id, Map<String, dynamic> json) {
+  factory Item.fromFire(String id, JsonResponse json) {
     json['id'] = id;
     json['additional_info'] = '';
     return Item.fromJson(json);
   }
 
-  Map<String, dynamic> toJson() => _$ItemToJson(this);
+  JsonResponse toJson() => _$ItemToJson(this);
 
   String getPrice() {
     return '\$' + price.toStringAsFixed(2);
@@ -40,8 +41,8 @@ class ItemCategories {
   final List<String> sub;
 
   ItemCategories({required this.main, required this.sub});
-  factory ItemCategories.fromJson(Map<String, dynamic> json) =>
+  factory ItemCategories.fromJson(JsonResponse json) =>
       _$ItemCategoriesFromJson(json);
 
-  Map<String, dynamic> toJson() => _$ItemCategoriesToJson(this);
+  JsonResponse toJson() => _$ItemCategoriesToJson(this);
 }

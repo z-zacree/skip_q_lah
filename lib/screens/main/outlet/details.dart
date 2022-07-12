@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:swipeable_page_route/swipeable_page_route.dart';
 import 'package:provider/provider.dart';
 import 'package:skip_q_lah/models/firestore/collections/outlet.dart';
 import 'package:skip_q_lah/models/providers/order.dart';
 import 'package:skip_q_lah/screens/main/outlet/is_takeaway.dart';
 import 'package:skip_q_lah/widgets/outlet_widgets.dart';
 import 'package:skip_q_lah/widgets/reusable_widgets.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:swipeable_page_route/swipeable_page_route.dart';
 
 class OutletDetail extends StatefulWidget {
   const OutletDetail({Key? key, required this.outlet}) : super(key: key);
@@ -26,10 +26,10 @@ class _OutletDetailState extends State<OutletDetail> {
   Widget build(BuildContext context) {
     outlet = widget.outlet;
 
-    return Consumer<OrderProvider>(
+    return Consumer<CreateOrderProvider>(
       builder: (
         BuildContext context,
-        OrderProvider orderProvider,
+        CreateOrderProvider orderProvider,
         Widget? child,
       ) {
         return Scaffold(
@@ -61,7 +61,7 @@ class _OutletDetailState extends State<OutletDetail> {
                   child: ElevatedButton(
                     onPressed: outlet.isOpen
                         ? () {
-                            orderProvider.beginNewOrder(outlet);
+                            orderProvider.beginOrder(outlet);
                             Navigator.push(
                               context,
                               SwipeablePageRoute(

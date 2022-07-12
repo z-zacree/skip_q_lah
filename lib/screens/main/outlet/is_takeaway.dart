@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:skip_q_lah/models/constants.dart';
 import 'package:skip_q_lah/models/firestore/collections/outlet.dart';
 import 'package:skip_q_lah/models/providers/order.dart';
 import 'package:skip_q_lah/screens/main/outlet/menu.dart';
@@ -21,10 +22,9 @@ class _IsTakeawayState extends State<IsTakeaway> {
   @override
   Widget build(BuildContext context) {
     outlet = widget.outlet;
-    final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
 
-    return Consumer<OrderProvider>(
+    return Consumer<CreateOrderProvider>(
       builder: (context, orderProvider, child) => Scaffold(
         body: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -41,7 +41,6 @@ class _IsTakeawayState extends State<IsTakeaway> {
                   child: IconButton(
                     splashRadius: 28,
                     onPressed: () {
-                      orderProvider.resetOrder();
                       Navigator.pop(context);
                     },
                     icon: FaIcon(
@@ -67,7 +66,7 @@ class _IsTakeawayState extends State<IsTakeaway> {
                         ),
                       ),
                       onPressed: () {
-                        orderProvider.order!.isTakeaway = true;
+                        orderProvider.mode = OrderMode.takingAway;
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -88,7 +87,7 @@ class _IsTakeawayState extends State<IsTakeaway> {
                         ),
                       ),
                       onPressed: () {
-                        orderProvider.order!.isTakeaway = false;
+                        orderProvider.mode = OrderMode.eatingIn;
                         Navigator.push(
                           context,
                           MaterialPageRoute(

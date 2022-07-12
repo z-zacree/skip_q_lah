@@ -152,7 +152,7 @@ class Categories {
 
   Categories({required this.main, required this.sub});
 
-  Map<String, dynamic> toJson() {
+  JsonResponse toJson() {
     return <String, dynamic>{'main': main, 'sub': sub};
   }
 

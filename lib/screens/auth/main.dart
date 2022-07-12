@@ -27,12 +27,14 @@ class _MainAuthPageState extends State<MainAuthPage> {
   void initState() {
     super.initState();
 
-    Future.delayed(const Duration(milliseconds: 400))
-        .then((_) => googleButton.fadeIn());
-    Future.delayed(const Duration(milliseconds: 500))
-        .then((_) => emailButton.fadeIn());
-    Future.delayed(const Duration(milliseconds: 550))
-        .then((_) => anonButton.fadeIn());
+    if (FirebaseAuth.instance.currentUser == null) {
+      Future.delayed(const Duration(milliseconds: 400))
+          .then((_) => googleButton.fadeIn());
+      Future.delayed(const Duration(milliseconds: 500))
+          .then((_) => emailButton.fadeIn());
+      Future.delayed(const Duration(milliseconds: 550))
+          .then((_) => anonButton.fadeIn());
+    }
   }
 
   @override
@@ -76,17 +78,24 @@ class _MainAuthPageState extends State<MainAuthPage> {
                   style: TextStyle(color: Colors.black),
                 ),
                 onPressed: () async {
-                  Map<String, dynamic> userCredential =
+                  JsonResponse userCredential =
                       await AuthenticationService().signInWithGoogle();
-                  debugPrint(userCredential['code']);
                   if (userCredential['user'] != null) {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(builder: (context) {
-                        return const UserDetailsPage();
-                      }),
-                      (route) => false,
-                    );
+                    if (userCredential['exists']) {
+                      Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (context) {
+                          return const MainHomePage();
+                        }),
+                        (route) => false,
+                      );
+                    } else {
+                      Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (context) {
+                          return const UserDetailsPage();
+                        }),
+                        (route) => false,
+                      );
+                    }
                   }
                 },
                 style: ElevatedButton.styleFrom(

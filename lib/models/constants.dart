@@ -74,14 +74,42 @@ class DocumentSerializer
   DocumentReference toJson(DocumentReference docRef) => docRef;
 }
 
-class LatLngSerializer implements JsonConverter<LatLng, LatLng> {
+class LatLngSerializer implements JsonConverter<LatLng, JsonResponse> {
   const LatLngSerializer();
 
   @override
-  LatLng fromJson(LatLng latLng) => latLng;
+  LatLng fromJson(JsonResponse json) => LatLng(
+        json['latitude'],
+        json['longtitude'],
+      );
 
   @override
-  LatLng toJson(LatLng latLng) => latLng;
+  JsonResponse toJson(LatLng latLng) => <String, dynamic>{
+        'latitude': latLng.latitude,
+        'longtitude': latLng.longitude,
+      };
 }
 
+typedef JsonResponse = Map<String, dynamic>;
+
 enum SortOrder { nameAscending, priceAscending, priceDescending }
+enum OrderStatus { preparing, overdue, completed }
+enum OrderMode { eatingIn, takingAway }
+enum PaymentMethod { cash, cardDetails, googlePay }
+
+final $OrderStatusEnumMap = {
+  OrderStatus.preparing: 'preparing',
+  OrderStatus.overdue: 'overdue',
+  OrderStatus.completed: 'completed',
+};
+
+final $OrderModeEnumMap = {
+  OrderMode.eatingIn: 'eating in',
+  OrderMode.takingAway: 'taking away',
+};
+
+final $PaymentMethodEnumMap = {
+  PaymentMethod.cash: 'cash',
+  PaymentMethod.cardDetails: 'card details',
+  PaymentMethod.googlePay: 'google pay',
+};

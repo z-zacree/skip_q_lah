@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:skip_q_lah/firebase_options.dart';
-import 'package:skip_q_lah/models/auth/main.dart';
 import 'package:skip_q_lah/models/providers/items.dart';
 import 'package:skip_q_lah/models/providers/order.dart';
 import 'package:skip_q_lah/models/providers/user_details.dart';
@@ -30,28 +29,13 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider.value(value: UserDetailsProvider()),
         ChangeNotifierProvider.value(value: ItemsProvider()),
-        ChangeNotifierProvider.value(value: OrderProvider()),
-        Provider<AuthenticationService>.value(value: AuthenticationService()),
-        StreamProvider(
-          create: (ctx) => ctx.read<AuthenticationService>().authStateChanges,
-          initialData: null,
-        ),
+        ChangeNotifierProvider.value(value: CreateOrderProvider()),
       ],
-      child: const ThemeMaterial(initPage: AuthWrapper()),
+      child: ThemeMaterial(
+        initPage: FirebaseAuth.instance.currentUser == null
+            ? const MainAuthPage()
+            : const MainHomePage(),
+      ),
     );
-  }
-}
-
-class AuthWrapper extends StatelessWidget {
-  const AuthWrapper({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final firebaseUser = context.watch<User?>();
-
-    if (firebaseUser != null) {
-      return const MainHomePage();
-    }
-    return const MainAuthPage();
   }
 }

@@ -26,11 +26,11 @@ class _OutletMenuState extends State<OutletMenu> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<ItemsProvider, OrderProvider>(
+    return Consumer2<ItemsProvider, CreateOrderProvider>(
       builder: (
         BuildContext context,
         ItemsProvider itemsProvider,
-        OrderProvider orderProvider,
+        CreateOrderProvider orderProvider,
         Widget? child,
       ) {
         outletItems = itemsProvider.getOutletItems(widget.outlet);
@@ -43,7 +43,7 @@ class _OutletMenuState extends State<OutletMenu> {
                   24,
                   169,
                   24,
-                  orderProvider.order!.itemList.isEmpty ? 0 : 32,
+                  orderProvider.items.isEmpty ? 0 : 32,
                 ),
                 physics: const BouncingScrollPhysics(),
                 child: Column(
@@ -81,7 +81,6 @@ class _OutletMenuState extends State<OutletMenu> {
                             child: IconButton(
                               splashRadius: 28,
                               onPressed: () {
-                                orderProvider.resetOrder();
                                 Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(builder: (context) {
@@ -161,7 +160,7 @@ class _OutletMenuState extends State<OutletMenu> {
               ),
             ),
             Positioned(
-              bottom: orderProvider.order!.itemList.isNotEmpty ? 0 : -50,
+              bottom: orderProvider.items.isNotEmpty ? 0 : -50,
               left: 20,
               right: 20,
               child: ElevatedButton(

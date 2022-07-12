@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:skip_q_lah/models/constants.dart';
 
 import 'item.dart';
 import 'outlet.dart';
@@ -6,52 +7,33 @@ import 'outlet.dart';
 part 'order.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
-class Order {
-  String id;
+class UserOrder {
+  String id, userId;
+  int orderNumber;
+  OrderMode mode;
+  OrderStatus status;
+  PaymentMethod method;
+  List<Item> items;
   Outlet outlet;
-  List<Item> itemList;
-  int relativeWaitingTime;
-  bool isTakeaway, isCompleted;
 
-  Order({
+  UserOrder({
     required this.id,
+    required this.userId,
+    required this.orderNumber,
+    required this.mode,
+    required this.status,
+    required this.method,
+    required this.items,
     required this.outlet,
-    required this.itemList,
-    required this.isTakeaway,
-    required this.relativeWaitingTime,
-    required this.isCompleted,
   });
 
-  factory Order.fromJson(Map<String, dynamic> json) => _$OrderFromJson(json);
+  JsonResponse toJson() => _$UserOrderToJson(this);
 
-  factory Order.blank(Outlet outlet) => Order(
-        id: '',
-        outlet: outlet,
-        itemList: [],
-        isCompleted: false,
-        isTakeaway: false,
-        relativeWaitingTime: 1,
-      );
+  factory UserOrder.fromJson(JsonResponse json) => _$UserOrderFromJson(json);
 
-  Map<String, dynamic> toJson() => _$OrderToJson(this);
+  factory UserOrder.fromFire(String id, JsonResponse json) {
+    json['id'] = id;
 
-  List<MapEntry<Item, int>> getItemMapEntries() {
-    Map<Item, int> itemMap = {};
-
-    // ignore: avoid_function_literals_in_foreach_calls
-    itemList.forEach((_item) => itemMap[_item] =
-        !itemMap.containsKey(_item) ? (1) : (itemMap[_item]! + 1));
-
-    return itemMap.entries.toList();
-  }
-
-  double getTotalPrice() {
-    double totalPrice = 0;
-
-    for (var item in itemList) {
-      totalPrice += item.price;
-    }
-
-    return totalPrice;
+    return UserOrder.fromJson(json);
   }
 }

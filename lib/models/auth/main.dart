@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:skip_q_lah/models/constants.dart';
 
 class AuthenticationService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -10,7 +12,7 @@ class AuthenticationService {
     await _firebaseAuth.signOut();
   }
 
-  Future<Map<String, dynamic>> emailSignIn({
+  Future<JsonResponse> emailSignIn({
     required String email,
     required String password,
   }) async {
@@ -35,7 +37,7 @@ class AuthenticationService {
     }
   }
 
-  Future<Map<String, dynamic>> emailSignUp({
+  Future<JsonResponse> emailSignUp({
     required String email,
     required String password,
   }) async {
@@ -54,7 +56,7 @@ class AuthenticationService {
     }
   }
 
-  Future<Map<String, dynamic>> signInWithGoogle() async {
+  Future<JsonResponse> signInWithGoogle() async {
     try {
       // Trigger the authentication flow
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
@@ -74,7 +76,20 @@ class AuthenticationService {
         credential,
       );
 
-      return {'user': result.user, 'code': 'sign-in-success'};
+      if (result.user != null) {
+        DocumentSnapshot<JsonResponse> userDocs = await FirebaseFirestore
+            .instance
+            .collection('users')
+            .doc(result.user!.uid)
+            .get();
+        return {
+          'user': result.user,
+          'code': 'sign-in-success',
+          'exists': userDocs.exists,
+        };
+      } else {
+        return {'code': 'sign-in-failed'};
+      }
     } on FirebaseAuthException catch (e) {
       return {'code': e.code};
     }

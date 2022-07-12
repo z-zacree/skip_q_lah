@@ -12,18 +12,20 @@ class _OrderListPageState extends State<OrderListPage> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
-    return SingleChildScrollView(
-      padding: EdgeInsets.only(
-        top: screenHeight * 0.1,
-        left: 36,
-        right: 36,
-        bottom: 36,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          TextHeader(text: 'Orders'),
-        ],
+    return Scaffold(
+      body: SingleChildScrollView(
+        padding: EdgeInsets.only(
+          top: screenHeight * 0.1,
+          left: 36,
+          right: 36,
+          bottom: 36,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: const [
+            TextHeader(text: 'Orders'),
+          ],
+        ),
       ),
     );
   }

@@ -13,7 +13,7 @@ class Outlet {
   final Address address;
   final LatLng latLng;
 
-  Outlet({
+  const Outlet({
     required this.id,
     required this.name,
     required this.contactNumber,
@@ -25,17 +25,21 @@ class Outlet {
     required this.latLng,
   });
 
-  factory Outlet.fromJson(Map<String, dynamic> json) {
+  factory Outlet.fromJson(JsonResponse json) {
     return _$OutletFromJson(json);
   }
 
-  factory Outlet.fromFire(String id, LatLng latLng, Map<String, dynamic> json) {
+  factory Outlet.fromFire(
+    String id,
+    JsonResponse latLng,
+    JsonResponse json,
+  ) {
     json['id'] = id;
     json['lat_lng'] = latLng;
     return Outlet.fromJson(json);
   }
 
-  Map<String, dynamic> toJson() => _$OutletToJson(this);
+  JsonResponse toJson() => _$OutletToJson(this);
 }
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
@@ -44,8 +48,8 @@ class Period {
 
   Period({required this.open, required this.close});
 
-  factory Period.fromJson(Map<String, dynamic> json) => _$PeriodFromJson(json);
-  Map<String, dynamic> toJson() => _$PeriodToJson(this);
+  factory Period.fromJson(JsonResponse json) => _$PeriodFromJson(json);
+  JsonResponse toJson() => _$PeriodToJson(this);
 }
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
@@ -55,8 +59,8 @@ class Timing {
 
   Timing({required this.day, required this.time});
 
-  factory Timing.fromJson(Map<String, dynamic> json) => _$TimingFromJson(json);
-  Map<String, dynamic> toJson() => _$TimingToJson(this);
+  factory Timing.fromJson(JsonResponse json) => _$TimingFromJson(json);
+  JsonResponse toJson() => _$TimingToJson(this);
 }
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
@@ -71,7 +75,6 @@ class Address {
     required this.postalCode,
   });
 
-  factory Address.fromJson(Map<String, dynamic> json) =>
-      _$AddressFromJson(json);
-  Map<String, dynamic> toJson() => _$AddressToJson(this);
+  factory Address.fromJson(JsonResponse json) => _$AddressFromJson(json);
+  JsonResponse toJson() => _$AddressToJson(this);
 }

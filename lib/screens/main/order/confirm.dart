@@ -17,11 +17,11 @@ class ConfirmOrderPage extends StatefulWidget {
 class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<OrderProvider>(
+    return Consumer<CreateOrderProvider>(
       builder: (context, orderProvider, child) {
-        double totalPrice = orderProvider.order!.getTotalPrice();
+        double totalPrice = orderProvider.getTotalPrice();
         List<MapEntry<Item, int>> itemMapEntries =
-            orderProvider.order!.getItemMapEntries();
+            orderProvider.getItemMapEntries();
 
         return Scaffold(
           body: Stack(
@@ -261,16 +261,16 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
                 left: 20,
                 right: 20,
                 child: ElevatedButton(
-                  onPressed: orderProvider.order!.itemList.isEmpty
+                  onPressed: orderProvider.items.isEmpty
                       ? null
                       : () {
-                          orderProvider.pendOrder();
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) {
                               return const OutletListPage();
                             }),
                           );
+                          orderProvider.pendOrder();
                         },
                   child: const Text('Check Out'),
                   style: ElevatedButton.styleFrom(

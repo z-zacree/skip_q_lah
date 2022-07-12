@@ -186,10 +186,10 @@ class _ItemDetailsState extends State<ItemDetails> {
   @override
   Widget build(BuildContext context) {
     item = widget.item;
-    return Consumer<OrderProvider>(
+    return Consumer<CreateOrderProvider>(
       builder: (
         BuildContext context,
-        OrderProvider orderProvider,
+        CreateOrderProvider orderProvider,
         Widget? child,
       ) {
         return Container(
@@ -288,7 +288,9 @@ class _ItemDetailsState extends State<ItemDetails> {
                       const SizedBox(height: 12),
                       ElevatedButton(
                         onPressed: () {
-                          orderProvider.addItemCount(item, count);
+                          for (int i = 0; i < count; i++) {
+                            orderProvider.addItem(item);
+                          }
                           Navigator.pop(context);
                         },
                         child: const Text('Add to Cart'),

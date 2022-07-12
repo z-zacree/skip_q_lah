@@ -6,22 +6,43 @@ part of 'order.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Order _$OrderFromJson(Map<String, dynamic> json) => Order(
+UserOrder _$UserOrderFromJson(Map<String, dynamic> json) => UserOrder(
       id: json['id'] as String,
-      outlet: Outlet.fromJson(json['outlet'] as Map<String, dynamic>),
-      itemList: (json['item_list'] as List<dynamic>)
+      userId: json['user_id'] as String,
+      orderNumber: json['order_number'] as int,
+      mode: $enumDecode(_$OrderModeEnumMap, json['mode']),
+      status: $enumDecode(_$OrderStatusEnumMap, json['status']),
+      method: $enumDecode(_$PaymentMethodEnumMap, json['method']),
+      items: (json['items'] as List<dynamic>)
           .map((e) => Item.fromJson(e as Map<String, dynamic>))
           .toList(),
-      isTakeaway: json['is_takeaway'] as bool,
-      relativeWaitingTime: json['relative_waiting_time'] as int,
-      isCompleted: json['is_completed'] as bool,
+      outlet: Outlet.fromJson(json['outlet'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$OrderToJson(Order instance) => <String, dynamic>{
+Map<String, dynamic> _$UserOrderToJson(UserOrder instance) => <String, dynamic>{
       'id': instance.id,
+      'user_id': instance.userId,
+      'order_number': instance.orderNumber,
+      'mode': _$OrderModeEnumMap[instance.mode],
+      'status': _$OrderStatusEnumMap[instance.status],
+      'method': _$PaymentMethodEnumMap[instance.method],
+      'items': instance.items.map((e) => e.toJson()).toList(),
       'outlet': instance.outlet.toJson(),
-      'item_list': instance.itemList.map((e) => e.toJson()).toList(),
-      'relative_waiting_time': instance.relativeWaitingTime,
-      'is_takeaway': instance.isTakeaway,
-      'is_completed': instance.isCompleted,
     };
+
+const _$OrderModeEnumMap = {
+  OrderMode.eatingIn: 'eatingIn',
+  OrderMode.takingAway: 'takingAway',
+};
+
+const _$OrderStatusEnumMap = {
+  OrderStatus.preparing: 'preparing',
+  OrderStatus.overdue: 'overdue',
+  OrderStatus.completed: 'completed',
+};
+
+const _$PaymentMethodEnumMap = {
+  PaymentMethod.cash: 'cash',
+  PaymentMethod.cardDetails: 'cardDetails',
+  PaymentMethod.googlePay: 'googlePay',
+};
