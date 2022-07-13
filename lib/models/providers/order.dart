@@ -5,7 +5,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:skip_q_lah/models/constants.dart';
 import 'package:skip_q_lah/models/firestore/collections/item.dart';
+import 'package:skip_q_lah/models/firestore/collections/order.dart';
 import 'package:skip_q_lah/models/firestore/collections/outlet.dart';
+import 'package:skip_q_lah/models/firestore/main.dart';
 
 class CreateOrderProvider extends ChangeNotifier {
   Outlet? outlet;
@@ -13,7 +15,7 @@ class CreateOrderProvider extends ChangeNotifier {
   OrderMode mode = OrderMode.takingAway;
   PaymentMethod method = PaymentMethod.cash;
 
-  void pendOrder() async {
+  Future<UserOrder> pendOrder() async {
     FirebaseFirestore fs = FirebaseFirestore.instance;
     QuerySnapshot querySnapshot = await fs
         .collection('orders')
@@ -41,7 +43,14 @@ class CreateOrderProvider extends ChangeNotifier {
       'status': $OrderStatusEnumMap[OrderStatus.preparing],
     };
 
-    fs.collection('orders').add(order);
+    DocumentReference<JsonResponse> docRef =
+        await fs.collection('orders').add(order);
+
+    DocumentSnapshot<JsonResponse> doc = await docRef.get();
+
+    UserOrder userOrder = await FirestoreService().getUserOrder(doc.id, doc.data()!);
+
+    return userOrder;
   }
 
   void beginOrder(Outlet outlet) {
@@ -69,6 +78,11 @@ class CreateOrderProvider extends ChangeNotifier {
 
   void sortItems() {
     items.sort((a, b) => a.name.compareTo(b.name));
+    notifyListeners();
+  }
+
+  void changeOutlet(Outlet outlet) {
+    this.outlet = outlet;
     notifyListeners();
   }
 

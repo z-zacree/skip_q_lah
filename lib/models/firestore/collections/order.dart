@@ -10,9 +10,9 @@ part 'order.g.dart';
 class UserOrder {
   String id, userId;
   int orderNumber;
-  OrderMode mode;
+  OrderMode orderMode;
   OrderStatus status;
-  PaymentMethod method;
+  PaymentMethod paymentMethod;
   List<Item> items;
   Outlet outlet;
 
@@ -20,9 +20,9 @@ class UserOrder {
     required this.id,
     required this.userId,
     required this.orderNumber,
-    required this.mode,
+    required this.orderMode,
     required this.status,
-    required this.method,
+    required this.paymentMethod,
     required this.items,
     required this.outlet,
   });
@@ -36,4 +36,6 @@ class UserOrder {
 
     return UserOrder.fromJson(json);
   }
+
+  
 }

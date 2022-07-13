@@ -56,10 +56,14 @@ class _OutletListingState extends State<OutletListing> {
                   );
                 } else if (snapshot.connectionState ==
                     ConnectionState.waiting) {
-                  return Center(
-                    child: SpinKitThreeBounce(
-                      color: Theme.of(context).primaryColorDark,
-                      size: 25,
+                  return SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height - 300,
+                    child: Center(
+                      child: SpinKitThreeBounce(
+                        color: Theme.of(context).primaryColorDark,
+                        size: 25,
+                      ),
                     ),
                   );
                 } else {

@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:skip_q_lah/models/constants.dart';
+import 'package:skip_q_lah/models/firestore/collections/item.dart';
+import 'package:skip_q_lah/models/firestore/collections/order.dart';
 import 'package:skip_q_lah/models/firestore/collections/outlet.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
@@ -47,10 +50,45 @@ class FirestoreService {
     return Outlet.fromFire(outletDoc.id, latLng, outletDoc.data()!);
   }
 
+  Stream getUserOrders() => FirebaseFirestore.instance
+      .collection('orders')
+      .where('user_id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+      .snapshots();
+
   void setUserDetails({
     required String uid,
     required JsonResponse data,
   }) {
     fs.collection('users').doc(uid).set(data);
+  }
+
+    Future<UserOrder> getUserOrder(String id, JsonResponse json) async {
+    DocumentReference<JsonResponse> outletRef = json['outlet'];
+
+    json.remove('outlet');
+
+    Outlet outlet = await FirestoreService().getOutlet(outletRef);
+
+    json['outlet'] = outlet.toJson();
+
+    List<dynamic> stupidList = json['items'];
+
+    List<DocumentReference<JsonResponse>> itemRefList =
+        stupidList.map((e) => e as DocumentReference<JsonResponse>).toList();
+
+    List<JsonResponse> itemList = [];
+
+    for (DocumentReference<JsonResponse> itemRef in itemRefList) {
+      DocumentSnapshot<JsonResponse> docSnap = await itemRef.get();
+      Item item = Item.fromFire(docSnap.id, docSnap.data()!);
+
+      itemList.add(item.toJson());
+    }
+
+    json.remove('items');
+
+    json['items'] = itemList;
+
+    return UserOrder.fromFire(id, json);
   }
 }

@@ -10,9 +10,10 @@ UserOrder _$UserOrderFromJson(Map<String, dynamic> json) => UserOrder(
       id: json['id'] as String,
       userId: json['user_id'] as String,
       orderNumber: json['order_number'] as int,
-      mode: $enumDecode(_$OrderModeEnumMap, json['mode']),
+      orderMode: $enumDecode(_$OrderModeEnumMap, json['order_mode']),
       status: $enumDecode(_$OrderStatusEnumMap, json['status']),
-      method: $enumDecode(_$PaymentMethodEnumMap, json['method']),
+      paymentMethod:
+          $enumDecode(_$PaymentMethodEnumMap, json['payment_method']),
       items: (json['items'] as List<dynamic>)
           .map((e) => Item.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -23,16 +24,16 @@ Map<String, dynamic> _$UserOrderToJson(UserOrder instance) => <String, dynamic>{
       'id': instance.id,
       'user_id': instance.userId,
       'order_number': instance.orderNumber,
-      'mode': _$OrderModeEnumMap[instance.mode],
+      'order_mode': _$OrderModeEnumMap[instance.orderMode],
       'status': _$OrderStatusEnumMap[instance.status],
-      'method': _$PaymentMethodEnumMap[instance.method],
+      'payment_method': _$PaymentMethodEnumMap[instance.paymentMethod],
       'items': instance.items.map((e) => e.toJson()).toList(),
       'outlet': instance.outlet.toJson(),
     };
 
 const _$OrderModeEnumMap = {
-  OrderMode.eatingIn: 'eatingIn',
-  OrderMode.takingAway: 'takingAway',
+  OrderMode.eatingIn: 'eating in',
+  OrderMode.takingAway: 'taking away',
 };
 
 const _$OrderStatusEnumMap = {

@@ -1,9 +1,13 @@
+import 'dart:developer';
+
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:skip_q_lah/models/constants.dart';
 import 'package:skip_q_lah/models/firestore/collections/item.dart';
 import 'package:skip_q_lah/models/providers/order.dart';
+import 'package:skip_q_lah/screens/main/outlet/change_location.dart';
 import 'package:skip_q_lah/screens/main/outlet/main.dart';
 import 'package:skip_q_lah/widgets/reusable_widgets.dart';
 
@@ -41,8 +45,39 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
                       const TextSubHeader('Outlet'),
                       const SizedBox(height: 16),
                       Row(
-                        children: [],
+                        children: [
+                          Expanded(
+                            child: Text(
+                              orderProvider.outlet?.name ??
+                                  'Lunar @ Unknown Place',
+                              maxLines: 1,
+                              overflow: TextOverflow.fade,
+                              softWrap: false,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Text.rich(
+                            TextSpan(
+                              text: 'Change location',
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const ChangeOrderLocation(),
+                                    ),
+                                  );
+                                },
+                              style: const TextStyle(color: Colors.blueAccent),
+                            ),
+                          ),
+                        ],
                       ),
+                      const SizedBox(height: 24),
                       const TextSubHeader('Items'),
                       const SizedBox(height: 16),
                       ...itemMapEntries.map(
@@ -264,13 +299,15 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
                   onPressed: orderProvider.items.isEmpty
                       ? null
                       : () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) {
-                              return const OutletListPage();
-                            }),
-                          );
-                          orderProvider.pendOrder();
+                          orderProvider.pendOrder().then((value) {
+                            log(value.toJson().toString());
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) {
+                                return const OutletListPage();
+                              }),
+                            );
+                          });
                         },
                   child: const Text('Check Out'),
                   style: ElevatedButton.styleFrom(
