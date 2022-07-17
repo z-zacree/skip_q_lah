@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +46,8 @@ class CreateOrderProvider extends ChangeNotifier {
 
     DocumentSnapshot<JsonResponse> doc = await docRef.get();
 
-    UserOrder userOrder = await FirestoreService().getUserOrder(doc.id, doc.data()!);
+    UserOrder userOrder =
+        await FirestoreService().getUserOrder(doc.id, doc.data()!);
 
     return userOrder;
   }

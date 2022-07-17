@@ -12,6 +12,25 @@ class AuthenticationService {
     await _firebaseAuth.signOut();
   }
 
+  Future<JsonResponse> anonSignIn() async {
+    try {
+      UserCredential result = await _firebaseAuth.signInAnonymously();
+
+      return result.user != null
+          ? {
+              'user': result.user,
+              'code': 'sign-in-success',
+            }
+          : {
+              'code': 'sign-in-failed',
+            };
+    } on FirebaseAuthException catch (e) {
+      return {
+        'code': e.code,
+      };
+    }
+  }
+
   Future<JsonResponse> emailSignIn({
     required String email,
     required String password,

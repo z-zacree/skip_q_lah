@@ -3,13 +3,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:skip_q_lah/models/constants.dart';
-import 'package:skip_q_lah/models/firestore/collections/item.dart';
 import 'package:skip_q_lah/models/firestore/collections/outlet.dart';
 import 'package:skip_q_lah/models/providers/items.dart';
 import 'package:skip_q_lah/models/providers/order.dart';
-import 'package:skip_q_lah/screens/main/order/confirm.dart';
+import 'package:skip_q_lah/screens/main/outlet/order/confirm.dart';
 import 'package:skip_q_lah/screens/main/outlet/main.dart';
-import 'package:skip_q_lah/widgets/outlet_widgets.dart';
+import 'package:skip_q_lah/widgets/item/tile.dart';
 import 'package:skip_q_lah/widgets/reusable_widgets.dart';
 
 class OutletMenu extends StatefulWidget {

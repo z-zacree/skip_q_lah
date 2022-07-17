@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -7,8 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:skip_q_lah/models/constants.dart';
 import 'package:skip_q_lah/models/firestore/collections/item.dart';
 import 'package:skip_q_lah/models/providers/order.dart';
+import 'package:skip_q_lah/screens/main/outlet/order/success.dart';
 import 'package:skip_q_lah/screens/main/outlet/change_location.dart';
-import 'package:skip_q_lah/screens/main/outlet/main.dart';
 import 'package:skip_q_lah/widgets/reusable_widgets.dart';
 
 class ConfirmOrderPage extends StatefulWidget {
@@ -300,11 +298,10 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
                       ? null
                       : () {
                           orderProvider.pendOrder().then((value) {
-                            log(value.toJson().toString());
                             Navigator.push(
                               context,
                               MaterialPageRoute(builder: (context) {
-                                return const OutletListPage();
+                                return OrderDetails(userOrder: value);
                               }),
                             );
                           });

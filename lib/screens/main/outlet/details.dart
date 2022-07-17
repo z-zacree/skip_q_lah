@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:skip_q_lah/widgets/outlet/map.dart';
+import 'package:skip_q_lah/widgets/outlet/panel.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:swipeable_page_route/swipeable_page_route.dart';
 import 'package:provider/provider.dart';
 import 'package:skip_q_lah/models/firestore/collections/outlet.dart';
 import 'package:skip_q_lah/models/providers/order.dart';
-import 'package:skip_q_lah/screens/main/outlet/is_takeaway.dart';
-import 'package:skip_q_lah/widgets/outlet_widgets.dart';
-import 'package:skip_q_lah/widgets/reusable_widgets.dart';
+import 'package:skip_q_lah/screens/main/outlet/order/is_takeaway.dart';
 
 class OutletDetail extends StatefulWidget {
   const OutletDetail({Key? key, required this.outlet}) : super(key: key);
@@ -108,125 +107,3 @@ class _OutletDetailState extends State<OutletDetail> {
     );
   }
 }
-
-class MapWidget extends StatelessWidget {
-  const MapWidget({Key? key, required this.outlet}) : super(key: key);
-
-  final Outlet outlet;
-
-  @override
-  Widget build(BuildContext context) {
-    return GoogleMap(
-      initialCameraPosition: CameraPosition(
-        target: outlet.latLng,
-        zoom: 18,
-        tilt: 30,
-      ),
-      markers: {
-        Marker(
-          markerId: MarkerId(outlet.name),
-          position: outlet.latLng,
-        )
-      },
-      myLocationEnabled: true,
-      myLocationButtonEnabled: true,
-      compassEnabled: true,
-      onMapCreated: (controller) {
-        Future.delayed(const Duration(seconds: 1)).then(
-          (_) {
-            controller.animateCamera(
-              CameraUpdate.newCameraPosition(
-                CameraPosition(
-                  bearing: 45,
-                  target: outlet.latLng,
-                  tilt: 45.0,
-                  zoom: 18,
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-}
-
-class PanelWidget extends StatelessWidget {
-  const PanelWidget({
-    Key? key,
-    required this.scrollController,
-    required this.outlet,
-  }) : super(key: key);
-
-  final ScrollController scrollController;
-  final Outlet outlet;
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        ListView(
-          padding: const EdgeInsets.only(
-            left: 32,
-            right: 32,
-            bottom: 62,
-          ),
-          physics: const BouncingScrollPhysics(),
-          controller: scrollController,
-          children: <Widget>[
-            Center(
-              child: Container(
-                margin: const EdgeInsets.symmetric(vertical: 18),
-                width: 48,
-                height: 4.5,
-                decoration: BoxDecoration(
-                  color: Colors.grey[400],
-                  borderRadius: BorderRadius.circular(4),
-                ),
-              ),
-            ),
-            TextHeader(text: outlet.name),
-            panelText(header: 'Description', body: outlet.description),
-            const SizedBox(height: 24),
-            panelText(
-              header: 'Address',
-              body: '''
-${outlet.address.main}, ${outlet.address.sub}
-${outlet.address.postalCode}''',
-            ),
-            const SizedBox(height: 24),
-            panelText(header: 'Contact', body: outlet.contactNumber),
-            const SizedBox(height: 24),
-            const TextSubHeader('Opening Hours'),
-            const SizedBox(height: 8),
-            ...outlet.openingHours.asMap().entries.map((
-              MapEntry<int, Period> periodEntry,
-            ) {
-              Period period = periodEntry.value;
-              String day = days[periodEntry.key];
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 64,
-                        child: Text(day),
-                      ),
-                      Text('${period.open.time} - ${period.close.time}')
-                    ],
-                  ),
-                ],
-              );
-            }),
-            const SizedBox(height: 24),
-          ],
-        ),
-        indicator(outlet),
-      ],
-    );
-  }
-}
-
-List<String> days = ['Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun'];

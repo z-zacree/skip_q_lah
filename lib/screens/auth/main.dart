@@ -25,8 +25,6 @@ class _MainAuthPageState extends State<MainAuthPage> {
 
   @override
   void initState() {
-    super.initState();
-
     if (FirebaseAuth.instance.currentUser == null) {
       Future.delayed(const Duration(milliseconds: 400))
           .then((_) => googleButton.fadeIn());
@@ -35,6 +33,7 @@ class _MainAuthPageState extends State<MainAuthPage> {
       Future.delayed(const Duration(milliseconds: 550))
           .then((_) => anonButton.fadeIn());
     }
+    super.initState();
   }
 
   @override
@@ -154,13 +153,20 @@ class _MainAuthPageState extends State<MainAuthPage> {
                   'Continue anonymously',
                   style: TextStyle(color: Theme.of(context).primaryColorLight),
                 ),
-                onPressed: () => Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) {
-                    return const MainHomePage();
-                  }),
-                  (route) => false,
-                ),
+                onPressed: () async {
+                  JsonResponse userCredential =
+                      await AuthenticationService().anonSignIn();
+
+                  if (userCredential['code'] == 'sign-in-success') {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) {
+                        return const MainHomePage();
+                      }),
+                      (route) => false,
+                    );
+                  }
+                },
                 style: ElevatedButton.styleFrom(
                   elevation: 2,
                   shape: RoundedRectangleBorder(

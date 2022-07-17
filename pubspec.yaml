@@ -109,6 +109,9 @@ flutter:
     # see https://flutter.dev/custom-fonts/#from-packages
     assets:
         - assets/images/google-icon.png
+        - assets/images/order_success.png
+        - assets/images/takeaway.png
+        - assets/images/eating_in.png
 
     fonts:
         - family: Comfortaa

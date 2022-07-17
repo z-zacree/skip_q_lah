@@ -37,5 +37,34 @@ class UserOrder {
     return UserOrder.fromJson(json);
   }
 
-  
+  String get orderNumberString {
+    if (orderNumber < 10) {
+      return '00$orderNumber';
+    } else if (orderNumber < 100) {
+      return '0$orderNumber';
+    } else {
+      return orderNumber.toString();
+    }
+  }
+
+  String get orderModeString {
+    switch (orderMode) {
+      case OrderMode.eatingIn:
+        return 'Eating in';
+      case OrderMode.takingAway:
+        return 'Taking away';
+      default:
+        return 'Eating in';
+    }
+  }
+
+  List<MapEntry<Item, int>> getItemMapEntries() {
+    Map<Item, int> itemMap = {};
+
+    // ignore: avoid_function_literals_in_foreach_calls
+    items.forEach((_item) => itemMap[_item] =
+        !itemMap.containsKey(_item) ? (1) : (itemMap[_item]! + 1));
+
+    return itemMap.entries.toList();
+  }
 }

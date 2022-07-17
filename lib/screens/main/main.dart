@@ -7,15 +7,24 @@ import 'package:skip_q_lah/screens/main/profile/main.dart';
 import 'package:skip_q_lah/screens/main/settings/main.dart';
 
 class MainHomePage extends StatefulWidget {
-  const MainHomePage({Key? key}) : super(key: key);
+  const MainHomePage({Key? key, this.initIndex = 0}) : super(key: key);
+
+  final int initIndex;
 
   @override
   State<MainHomePage> createState() => _MainHomePageState();
 }
 
 class _MainHomePageState extends State<MainHomePage> {
-  int pageIndex = 0;
-  final PageController _pageController = PageController();
+  late int pageIndex;
+  late PageController _pageController;
+
+  @override
+  void initState() {
+    pageIndex = widget.initIndex;
+    _pageController = PageController(initialPage: widget.initIndex);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -3,7 +3,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:skip_q_lah/models/firestore/collections/outlet.dart';
 import 'package:skip_q_lah/models/firestore/main.dart';
-import 'package:skip_q_lah/widgets/outlet_widgets.dart';
+import 'package:skip_q_lah/widgets/outlet/tile.dart';
 import 'package:skip_q_lah/widgets/reusable_widgets.dart';
 
 class OutletListing extends StatefulWidget {
@@ -18,8 +18,9 @@ class _OutletListingState extends State<OutletListing> {
 
   @override
   void initState() {
-    super.initState();
     futureList = FirestoreService().getOutletList();
+
+    super.initState();
   }
 
   @override

@@ -19,8 +19,9 @@ class _ChangeOrderLocationState extends State<ChangeOrderLocation> {
 
   @override
   void initState() {
-    super.initState();
     futureList = FirestoreService().getOutletList();
+
+    super.initState();
   }
 
   @override
