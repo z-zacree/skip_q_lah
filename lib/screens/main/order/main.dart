@@ -13,8 +13,9 @@ class _OrderListPageState extends State<OrderListPage>
     with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
-    return ThemeMaterial(
-      initPage: const OrderListing(),
+    super.build(context);
+    return const ThemeMaterial(
+      initPage: OrderListing(),
     );
   }
 

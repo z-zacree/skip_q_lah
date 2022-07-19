@@ -25,6 +25,7 @@ class _MainAuthPageState extends State<MainAuthPage> {
 
   @override
   void initState() {
+    super.initState();
     if (FirebaseAuth.instance.currentUser == null) {
       Future.delayed(const Duration(milliseconds: 400))
           .then((_) => googleButton.fadeIn());
@@ -33,7 +34,6 @@ class _MainAuthPageState extends State<MainAuthPage> {
       Future.delayed(const Duration(milliseconds: 550))
           .then((_) => anonButton.fadeIn());
     }
-    super.initState();
   }
 
   @override

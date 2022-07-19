@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:skip_q_lah/models/auth/main.dart';
-import 'package:skip_q_lah/screens/main/main.dart';
 import 'package:skip_q_lah/widgets/reusable_widgets.dart';
 
 import 'additional_details.dart';
@@ -44,7 +43,7 @@ class _SignUpPageState extends State<SignUpPage> {
               RoundedOutlineInput(
                 label: 'Email',
                 validator: (String? value) {
-                  if (value == null || value.isEmpty) {
+                  if (value == null || value.trim().isEmpty) {
                     return 'Please enter a valid Email';
                   }
                   if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")

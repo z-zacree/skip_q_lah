@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -16,14 +18,30 @@ class AuthenticationService {
     try {
       UserCredential result = await _firebaseAuth.signInAnonymously();
 
-      return result.user != null
-          ? {
-              'user': result.user,
-              'code': 'sign-in-success',
-            }
-          : {
-              'code': 'sign-in-failed',
-            };
+      if (result.user != null) {
+        DocumentSnapshot<JsonResponse> userDocs = await FirebaseFirestore
+            .instance
+            .collection('users')
+            .doc(result.user!.uid)
+            .get();
+
+        if (!userDocs.exists) {
+          FirebaseFirestore.instance
+              .collection('users')
+              .doc(result.user!.uid)
+              .set({
+            'full_name': '',
+            'username': 'Anon-${result.user!.uid.substring(
+              Random().nextInt(24),
+            )}',
+            'mobile_number': ''
+          });
+        }
+
+        return {'user': result.user, 'code': 'sign-in-success'};
+      }
+
+      return {'code': 'sign-in-failed'};
     } on FirebaseAuthException catch (e) {
       return {
         'code': e.code,
@@ -42,13 +60,8 @@ class AuthenticationService {
       );
 
       return result.user != null
-          ? {
-              'user': result.user,
-              'code': 'sign-in-success',
-            }
-          : {
-              'code': 'sign-in-failed',
-            };
+          ? {'user': result.user, 'code': 'sign-in-success'}
+          : {'code': 'sign-in-failed'};
     } on FirebaseAuthException catch (e) {
       return {
         'code': e.code,

@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:skip_q_lah/models/firestore/collections/order.dart';
-import 'package:skip_q_lah/screens/main/main.dart';
-import 'package:skip_q_lah/screens/main/order/details.dart';
 import 'package:skip_q_lah/screens/main/outlet/main.dart';
 import 'package:skip_q_lah/widgets/reusable_widgets.dart';
-import 'package:swipeable_page_route/swipeable_page_route.dart';
 
 class OrderDetails extends StatefulWidget {
   const OrderDetails({Key? key, required this.userOrder}) : super(key: key);

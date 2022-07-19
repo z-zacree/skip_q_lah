@@ -121,11 +121,20 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                     Column(
                       children: <Widget>[
                         buildFormField(
-                          controller: _mobileNumController,
-                          themeColor: Theme.of(context).primaryColorDark,
-                          labelText: 'What is your mobile number?',
-                          hintText: 'Of course, if you don\'t mind',
-                        ),
+                            controller: _mobileNumController,
+                            themeColor: Theme.of(context).primaryColorDark,
+                            labelText: 'What is your mobile number?',
+                            hintText: 'Of course, if you don\'t mind',
+                            validator: (value) {
+                              if (value == null ||
+                                  value.trim().isEmpty ||
+                                  value.length < 8 ||
+                                  value.length > 15 ||
+                                  double.tryParse(value) != null) {
+                                return 'Please enter a valid mobile number';
+                              }
+                              return null;
+                            }),
                         const SizedBox(height: 24),
                         Row(
                           mainAxisSize: MainAxisSize.max,
@@ -166,6 +175,7 @@ TextFormField buildFormField({
   required Color themeColor,
   required String labelText,
   String? hintText,
+  String? Function(String?)? validator,
 }) {
   return TextFormField(
     controller: controller,
@@ -186,5 +196,6 @@ TextFormField buildFormField({
         ),
       ),
     ),
+    validator: validator,
   );
 }

@@ -64,6 +64,7 @@ class _OrderListingState extends State<OrderListing> {
                           ),
                         );
                       }
+
                       UserOrder userOrder = snapshot.data!;
 
                       if (userOrder.status != OrderStatus.completed) {

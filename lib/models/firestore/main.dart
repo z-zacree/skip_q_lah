@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:skip_q_lah/models/constants.dart';
 import 'package:skip_q_lah/models/firestore/collections/item.dart';
 import 'package:skip_q_lah/models/firestore/collections/order.dart';
@@ -55,14 +54,11 @@ class FirestoreService {
       .where('user_id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
       .snapshots();
 
-  void setUserDetails({
-    required String uid,
-    required JsonResponse data,
-  }) {
+  void setUserDetails({required String uid, required JsonResponse data}) {
     fs.collection('users').doc(uid).set(data);
   }
 
-    Future<UserOrder> getUserOrder(String id, JsonResponse json) async {
+  Future<UserOrder> getUserOrder(String id, JsonResponse json) async {
     DocumentReference<JsonResponse> outletRef = json['outlet'];
 
     json.remove('outlet');
@@ -90,5 +86,12 @@ class FirestoreService {
     json['items'] = itemList;
 
     return UserOrder.fromFire(id, json);
+  }
+
+  Stream<DocumentSnapshot<JsonResponse>> getUserInfo() {
+    return fs
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .snapshots();
   }
 }

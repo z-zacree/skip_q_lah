@@ -40,7 +40,7 @@ class _SignInPageState extends State<SignInPage> {
               RoundedOutlineInput(
                 label: 'Email',
                 validator: (String? value) {
-                  if (value == null || value.isEmpty) {
+                  if (value == null || value.trim().isEmpty) {
                     return 'Please enter a valid Email';
                   }
                   if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
@@ -55,7 +55,9 @@ class _SignInPageState extends State<SignInPage> {
               RoundedOutlineInput(
                 label: 'Password',
                 validator: (String? value) {
-                  if (value == null || value.isEmpty || value.length < 8) {
+                  if (value == null ||
+                      value.trim().isEmpty ||
+                      value.length < 8) {
                     return 'Please enter a valid password';
                   }
                   return null;

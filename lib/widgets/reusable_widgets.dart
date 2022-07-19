@@ -47,18 +47,19 @@ class RoundedOutlineInput extends StatelessWidget {
   const RoundedOutlineInput({
     Key? key,
     required this.label,
-    required this.validator,
+    this.validator,
     this.padding,
     this.hint,
     this.controller,
     this.obscureText = false,
+    this.enabled = true,
   }) : super(key: key);
 
   final String label;
   final String? hint;
-  final bool obscureText;
+  final bool obscureText, enabled;
   final TextEditingController? controller;
-  final String? Function(String?) validator;
+  final String? Function(String?)? validator;
   final EdgeInsets? padding;
 
   @override
@@ -69,7 +70,7 @@ class RoundedOutlineInput extends StatelessWidget {
         controller: controller,
         obscureText: obscureText,
         decoration: InputDecoration(
-          contentPadding: const EdgeInsets.all(8),
+          contentPadding: const EdgeInsets.all(12),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8.0),
           ),
@@ -83,6 +84,7 @@ class RoundedOutlineInput extends StatelessWidget {
           ),
         ),
         validator: validator,
+        enabled: enabled,
       ),
     );
   }
@@ -100,7 +102,7 @@ class PrimaryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: onPressed ?? () {},
+      onPressed: onPressed,
       style: style ??
           ElevatedButton.styleFrom(
             shape: RoundedRectangleBorder(

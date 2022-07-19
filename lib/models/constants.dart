@@ -93,9 +93,24 @@ class LatLngSerializer implements JsonConverter<LatLng, JsonResponse> {
 typedef JsonResponse = Map<String, dynamic>;
 
 enum SortOrder { nameAscending, priceAscending, priceDescending }
-enum OrderStatus { preparing, overdue, completed }
-enum OrderMode { eatingIn, takingAway }
-enum PaymentMethod { cash, cardDetails, googlePay }
+enum OrderStatus {
+  preparing,
+  overdue,
+  completed,
+}
+
+@JsonEnum(fieldRename: FieldRename.snake)
+enum OrderMode {
+  eatingIn,
+  takingAway,
+}
+
+@JsonEnum(fieldRename: FieldRename.snake)
+enum PaymentMethod {
+  cash,
+  cardDetails,
+  googlePay,
+}
 
 final $OrderStatusEnumMap = {
   OrderStatus.preparing: 'preparing',
@@ -104,12 +119,12 @@ final $OrderStatusEnumMap = {
 };
 
 final $OrderModeEnumMap = {
-  OrderMode.eatingIn: 'eating in',
-  OrderMode.takingAway: 'taking away',
+  OrderMode.eatingIn: 'eating_in',
+  OrderMode.takingAway: 'taking_away',
 };
 
 final $PaymentMethodEnumMap = {
   PaymentMethod.cash: 'cash',
-  PaymentMethod.cardDetails: 'card details',
-  PaymentMethod.googlePay: 'google pay',
+  PaymentMethod.cardDetails: 'cardDetails',
+  PaymentMethod.googlePay: 'googlePay',
 };

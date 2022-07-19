@@ -32,8 +32,8 @@ Map<String, dynamic> _$UserOrderToJson(UserOrder instance) => <String, dynamic>{
     };
 
 const _$OrderModeEnumMap = {
-  OrderMode.eatingIn: 'eating in',
-  OrderMode.takingAway: 'taking away',
+  OrderMode.eatingIn: 'eating_in',
+  OrderMode.takingAway: 'taking_away',
 };
 
 const _$OrderStatusEnumMap = {
@@ -44,6 +44,6 @@ const _$OrderStatusEnumMap = {
 
 const _$PaymentMethodEnumMap = {
   PaymentMethod.cash: 'cash',
-  PaymentMethod.cardDetails: 'cardDetails',
-  PaymentMethod.googlePay: 'googlePay',
+  PaymentMethod.cardDetails: 'card_details',
+  PaymentMethod.googlePay: 'google_pay',
 };
