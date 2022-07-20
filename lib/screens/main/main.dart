@@ -41,8 +41,6 @@ class _MainHomePageState extends State<MainHomePage> {
             HomePage(),
             OutletListPage(),
             OrderListPage(),
-            ProfilePage(),
-            SettingsPage(),
           ],
         ),
         bottomNavigationBar: SalomonBottomBar(
@@ -68,14 +66,6 @@ class _MainHomePageState extends State<MainHomePage> {
             SalomonBottomBarItem(
               icon: const Icon(Icons.fastfood),
               title: const Text('Orders'),
-            ),
-            SalomonBottomBarItem(
-              icon: const Icon(Icons.person_rounded),
-              title: const Text('Profile'),
-            ),
-            SalomonBottomBarItem(
-              icon: const Icon(Icons.settings),
-              title: const Text('Settings'),
             ),
           ],
         ),

@@ -15,8 +15,6 @@ class OrderListing extends StatefulWidget {
 }
 
 class _OrderListingState extends State<OrderListing> {
-  Stream stream = FirestoreService().getUserOrders();
-
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
@@ -34,8 +32,8 @@ class _OrderListingState extends State<OrderListing> {
           const Text(
               'Show our staff your order number to collect your food 😊'),
           const SizedBox(height: 24),
-          StreamBuilder(
-            stream: stream,
+          StreamBuilder<QuerySnapshot<JsonResponse>>(
+            stream: FirestoreService().getUserOrders(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (!snapshot.hasData) return const Text('not connected');
               List<Widget> orderItemList = [];

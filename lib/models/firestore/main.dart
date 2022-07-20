@@ -49,11 +49,6 @@ class FirestoreService {
     return Outlet.fromFire(outletDoc.id, latLng, outletDoc.data()!);
   }
 
-  Stream getUserOrders() => FirebaseFirestore.instance
-      .collection('orders')
-      .where('user_id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-      .snapshots();
-
   void setUserDetails({required String uid, required JsonResponse data}) {
     fs.collection('users').doc(uid).set(data);
   }
@@ -94,4 +89,12 @@ class FirestoreService {
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .snapshots();
   }
+
+  Stream<QuerySnapshot<JsonResponse>> getUserOrders() => fs
+      .collection('orders')
+      .where('user_id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+      .snapshots();
+
+  Stream<QuerySnapshot<JsonResponse>> getNews() =>
+      fs.collection('news').snapshots();
 }
