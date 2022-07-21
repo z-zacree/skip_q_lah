@@ -6,17 +6,6 @@ class UserDetailsProvider extends ChangeNotifier {
   String username = '';
   String fullName = '';
   String mobileNumber = '';
-  int count = 0;
-
-  void incCount() {
-    count++;
-    notifyListeners();
-  }
-
-  void decCount() {
-    count--;
-    notifyListeners();
-  }
 
   void submitProcess({required Function callback}) {
     final user = <String, dynamic>{

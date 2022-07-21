@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:skip_q_lah/models/constants.dart';
+import 'package:skip_q_lah/models/enums.dart';
 
 import 'item.dart';
 import 'outlet.dart';
@@ -9,7 +10,7 @@ part 'order.g.dart';
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
 class UserOrder {
   String id, userId;
-  int orderNumber;
+  Identity identity;
   OrderMode orderMode;
   OrderStatus status;
   PaymentMethod paymentMethod;
@@ -19,7 +20,7 @@ class UserOrder {
   UserOrder({
     required this.id,
     required this.userId,
-    required this.orderNumber,
+    required this.identity,
     required this.orderMode,
     required this.status,
     required this.paymentMethod,
@@ -37,22 +38,16 @@ class UserOrder {
     return UserOrder.fromJson(json);
   }
 
-  String get orderNumberString {
-    if (orderNumber < 10) {
-      return '00$orderNumber';
-    } else if (orderNumber < 100) {
-      return '0$orderNumber';
-    } else {
-      return orderNumber.toString();
-    }
-  }
+  String get identityNumber => identity.number.toString().padLeft(3, '0');
+
+  ServiceType get identityType => identity.type;
 
   String get orderModeString {
     switch (orderMode) {
       case OrderMode.eatingIn:
         return 'Eating in';
-      case OrderMode.takingAway:
-        return 'Taking away';
+      case OrderMode.takeaway:
+        return 'Takeaway';
       default:
         return 'Eating in';
     }
@@ -67,4 +62,19 @@ class UserOrder {
 
     return itemMap.entries.toList();
   }
+}
+
+@JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
+class Identity {
+  final int number;
+  final ServiceType type;
+
+  const Identity({
+    required this.number,
+    required this.type,
+  });
+
+  JsonResponse toJson() => _$IdentityToJson(this);
+
+  factory Identity.fromJson(JsonResponse json) => _$IdentityFromJson(json);
 }

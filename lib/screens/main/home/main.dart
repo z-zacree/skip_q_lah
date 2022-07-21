@@ -7,7 +7,6 @@ import 'package:skip_q_lah/models/constants.dart';
 import 'package:skip_q_lah/models/firestore/collections/news.dart';
 import 'package:skip_q_lah/models/firestore/main.dart';
 import 'package:skip_q_lah/screens/main/profile/main.dart';
-import 'package:swipeable_page_route/swipeable_page_route.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -53,26 +52,27 @@ class _HomePageState extends State<HomePage> {
                     iconSize: 20,
                     icon: const FaIcon(FontAwesomeIcons.userLarge),
                     onPressed: () => showCustomModalBottomSheet(
-                        expand: true,
-                        context: context,
-                        builder: (context) => const ProfilePage(),
-                        containerWidget: (
-                          BuildContext context,
-                          Animation<double> animation,
-                          Widget child,
-                        ) {
-                          return SafeArea(
-                            minimum: const EdgeInsets.only(top: 90),
-                            child: Material(
-                              clipBehavior: Clip.antiAlias,
-                              borderRadius: const BorderRadius.vertical(
-                                top: Radius.circular(12),
-                              ),
-                              color: Theme.of(context).backgroundColor,
-                              child: child,
+                      expand: true,
+                      context: context,
+                      builder: (context) => const ProfilePage(),
+                      containerWidget: (
+                        BuildContext context,
+                        Animation<double> animation,
+                        Widget child,
+                      ) {
+                        return SafeArea(
+                          minimum: const EdgeInsets.only(top: 90),
+                          child: Material(
+                            clipBehavior: Clip.antiAlias,
+                            borderRadius: const BorderRadius.vertical(
+                              top: Radius.circular(12),
                             ),
-                          );
-                        }),
+                            color: Theme.of(context).backgroundColor,
+                            child: child,
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
               ],

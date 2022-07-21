@@ -11,14 +11,14 @@ class MapWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GoogleMap(
       initialCameraPosition: CameraPosition(
-        target: outlet.latLng,
+        target: outlet.location,
         zoom: 18,
         tilt: 30,
       ),
       markers: {
         Marker(
           markerId: MarkerId(outlet.name),
-          position: outlet.latLng,
+          position: outlet.location,
         )
       },
       myLocationEnabled: true,
@@ -31,7 +31,7 @@ class MapWidget extends StatelessWidget {
               CameraUpdate.newCameraPosition(
                 CameraPosition(
                   bearing: 45,
-                  target: outlet.latLng,
+                  target: outlet.location,
                   tilt: 45.0,
                   zoom: 18,
                 ),

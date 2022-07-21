@@ -1,17 +1,20 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:skip_q_lah/models/constants.dart';
+import 'package:skip_q_lah/models/enums.dart';
 
 part 'outlet.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
 @LatLngSerializer()
+@PeriodSerializer()
 class Outlet {
-  final String id, name, contactNumber, displayImage, description;
+  final String id, name, contactNumber, displayImage, description, address;
   final bool isOpen;
   final List<Period> openingHours;
-  final Address address;
-  final LatLng latLng;
+  final ServiceType takeawayType, eatingInType;
+  final LatLng location;
 
   const Outlet({
     required this.id,
@@ -21,22 +24,24 @@ class Outlet {
     required this.description,
     required this.isOpen,
     required this.openingHours,
+    required this.location,
     required this.address,
-    required this.latLng,
+    required this.eatingInType,
+    required this.takeawayType,
   });
 
-  factory Outlet.fromJson(JsonResponse json) {
-    return _$OutletFromJson(json);
-  }
+  factory Outlet.fromJson(JsonResponse json) => _$OutletFromJson(json);
 
   factory Outlet.fromFire(
-    String id,
-    JsonResponse latLng,
+    JsonResponse dataPlus,
     JsonResponse json,
   ) {
-    json['id'] = id;
-    json['lat_lng'] = latLng;
-    return Outlet.fromJson(json);
+    json['id'] = dataPlus['id'];
+    json['location'] = dataPlus['location'];
+    json['address'] = dataPlus['address'];
+
+    json.remove('place_id');
+    return _$OutletFromJson(json);
   }
 
   JsonResponse toJson() => _$OutletToJson(this);
@@ -44,37 +49,68 @@ class Outlet {
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
 class Period {
-  final Timing open, close;
+  final bool isOpen;
+  final DateTime open, close;
 
-  Period({required this.open, required this.close});
+  Period({
+    this.isOpen = true,
+    required this.open,
+    required this.close,
+  });
 
-  factory Period.fromJson(JsonResponse json) => _$PeriodFromJson(json);
+  factory Period.fromJson(JsonResponse json) {
+    if (json['open'] == null) {
+      return Period(
+        isOpen: false,
+        open: DateTime.now(),
+        close: DateTime.now(),
+      );
+    }
+    return _$PeriodFromJson(json);
+  }
   JsonResponse toJson() => _$PeriodToJson(this);
 }
 
-@JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
-class Timing {
-  final int day;
-  final String time;
+class LatLngSerializer implements JsonConverter<LatLng, JsonResponse> {
+  const LatLngSerializer();
 
-  Timing({required this.day, required this.time});
+  @override
+  LatLng fromJson(JsonResponse json) => LatLng(
+        json['latitude'],
+        json['longitude'],
+      );
 
-  factory Timing.fromJson(JsonResponse json) => _$TimingFromJson(json);
-  JsonResponse toJson() => _$TimingToJson(this);
+  @override
+  JsonResponse toJson(LatLng latLng) => <String, dynamic>{
+        'latitude': latLng.latitude,
+        'longitude': latLng.longitude,
+      };
 }
 
-@JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
-class Address {
-  final String full, main, sub, postalCode, placeId;
+class PeriodSerializer implements JsonConverter<Period, JsonResponse> {
+  const PeriodSerializer();
 
-  Address({
-    required this.full,
-    required this.main,
-    required this.sub,
-    required this.placeId,
-    required this.postalCode,
-  });
+  @override
+  Period fromJson(JsonResponse json) {
+    if (json['isOpen'] != null && json['isOpen'] == false) {
+      return Period(
+        isOpen: false,
+        open: (json['open'] as Timestamp).toDate(),
+        close: (json['close'] as Timestamp).toDate(),
+      );
+    } else {
+      return Period(
+        isOpen: true,
+        open: (json['open'] as Timestamp).toDate(),
+        close: (json['close'] as Timestamp).toDate(),
+      );
+    }
+  }
 
-  factory Address.fromJson(JsonResponse json) => _$AddressFromJson(json);
-  JsonResponse toJson() => _$AddressToJson(this);
+  @override
+  JsonResponse toJson(Period period) => <String, dynamic>{
+        'open': period.open,
+        'close': period.close,
+        'isOpen': period.isOpen,
+      };
 }

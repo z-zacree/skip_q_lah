@@ -6,6 +6,7 @@ import 'package:skip_q_lah/models/firestore/collections/order.dart';
 import 'package:skip_q_lah/models/firestore/main.dart';
 import 'package:skip_q_lah/widgets/order/tile.dart';
 import 'package:skip_q_lah/widgets/reusable_widgets.dart';
+import 'package:skip_q_lah/models/enums.dart';
 
 class OrderListing extends StatefulWidget {
   const OrderListing({Key? key}) : super(key: key);

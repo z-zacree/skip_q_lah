@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:skip_q_lah/models/constants.dart';
+import 'package:skip_q_lah/models/enums.dart';
 import 'package:skip_q_lah/models/firestore/collections/outlet.dart';
 import 'package:skip_q_lah/models/providers/order.dart';
 import 'package:skip_q_lah/screens/main/outlet/order/menu.dart';
@@ -61,8 +61,10 @@ class _IsTakeawayState extends State<IsTakeaway> {
                   child: Image.asset('assets/images/takeaway.png'),
                 ),
                 title: const TextSubHeader('Takeaway'),
+                enabled: outlet.takeawayType != ServiceType.notAvailable,
                 onTap: () {
-                  orderProvider.mode = OrderMode.takingAway;
+                  orderProvider.mode = OrderMode.takeaway;
+                  orderProvider.type = outlet.takeawayType;
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -84,8 +86,10 @@ class _IsTakeawayState extends State<IsTakeaway> {
                   child: Image.asset('assets/images/eating_in.png'),
                 ),
                 title: const TextSubHeader('Eating in'),
+                enabled: outlet.eatingInType != ServiceType.notAvailable,
                 onTap: () {
                   orderProvider.mode = OrderMode.eatingIn;
+                  orderProvider.type = outlet.eatingInType;
                   Navigator.push(
                     context,
                     MaterialPageRoute(

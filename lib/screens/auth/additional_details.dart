@@ -12,6 +12,7 @@ class UserDetailsPage extends StatefulWidget {
 }
 
 class _UserDetailsPageState extends State<UserDetailsPage> {
+  int index = 0;
   final TextEditingController _nicknameController = TextEditingController();
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _mobileNumController = TextEditingController();
@@ -70,7 +71,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                 ),
                 const SizedBox(height: 48),
                 IndexedStack(
-                  index: provider.count,
+                  index: index,
                   children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -83,7 +84,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                         ),
                         const SizedBox(height: 24),
                         PrimaryButton(
-                          onPressed: () => provider.incCount(),
+                          onPressed: () => setState(() => index++),
                           child: Text(nnDisplay),
                         ),
                       ],
@@ -103,14 +104,14 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                           children: <Widget>[
                             Expanded(
                               child: SecondaryButton(
-                                onPressed: () => provider.decCount(),
+                                onPressed: () => setState(() => index--),
                                 child: const Text('Back'),
                               ),
                             ),
                             const SizedBox(width: 40),
                             Expanded(
                               child: PrimaryButton(
-                                onPressed: () => provider.incCount(),
+                                onPressed: () => setState(() => index++),
                                 child: Text(fnDisplay),
                               ),
                             ),
@@ -142,7 +143,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                           children: <Widget>[
                             Expanded(
                               child: SecondaryButton(
-                                onPressed: () => provider.decCount(),
+                                onPressed: () => setState(() => index--),
                                 child: const Text('Back'),
                               ),
                             ),

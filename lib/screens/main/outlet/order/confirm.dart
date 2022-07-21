@@ -32,7 +32,7 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.fromLTRB(
                     24,
-                    169,
+                    181,
                     24,
                     64,
                   ),
@@ -41,7 +41,7 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const TextSubHeader('Outlet'),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 12),
                       Row(
                         children: [
                           Expanded(
@@ -56,7 +56,6 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
                               ),
                             ),
                           ),
-                          const SizedBox(width: 12),
                           Text.rich(
                             TextSpan(
                               text: 'Change location',
@@ -77,132 +76,15 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
                       ),
                       const SizedBox(height: 24),
                       const TextSubHeader('Items'),
-                      const SizedBox(height: 16),
                       ...itemMapEntries.map(
                         (mapEntry) {
                           Item item = mapEntry.key;
                           int count = mapEntry.value;
 
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 1,
-                                  child: AspectRatio(
-                                    aspectRatio: 1,
-                                    child: Container(
-                                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(12)),
-                                      child: Image.network(
-                                        item.displayImage,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 16),
-                                Expanded(
-                                  flex: 3,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        item.name,
-                                        overflow: TextOverflow.fade,
-                                        maxLines: 1,
-                                        softWrap: false,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Text(
-                                        '\$${(item.price * count).toStringAsFixed(2)}',
-                                        maxLines: 1,
-                                        overflow: TextOverflow.fade,
-                                        softWrap: false,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(width: 16),
-                                Expanded(
-                                  flex: 1,
-                                  child: Column(
-                                    children: [
-                                      SizedBox(
-                                        width: 32,
-                                        height: 32,
-                                        child: ElevatedButton(
-                                          onPressed: () {
-                                            orderProvider.addItem(item);
-                                          },
-                                          child: Text(
-                                            '+',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .primaryColorDark,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          style: ElevatedButton.styleFrom(
-                                            elevation: 0,
-                                            primary: Colors.transparent,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        width: 32,
-                                        height: 32,
-                                        decoration: BoxDecoration(
-                                          color: AppColors.cadetBlueCrayola
-                                              .withAlpha(50),
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                        ),
-                                        child: Center(
-                                          child: Text(count.toString()),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 32,
-                                        height: 32,
-                                        child: ElevatedButton(
-                                          onPressed: () {
-                                            orderProvider.removeItem(item);
-                                          },
-                                          child: Text(
-                                            '-',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .primaryColorDark,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          style: ElevatedButton.styleFrom(
-                                            elevation: 0,
-                                            primary: Colors.transparent,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
+                          return ConfirmItemTile(
+                            item: item,
+                            provider: orderProvider,
+                            count: count,
                           );
                         },
                       ),
@@ -319,6 +201,147 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
           ),
         );
       },
+    );
+  }
+}
+
+class ConfirmItemTile extends StatefulWidget {
+  const ConfirmItemTile({
+    Key? key,
+    required this.item,
+    required this.provider,
+    required this.count,
+  }) : super(key: key);
+
+  final CreateOrderProvider provider;
+  final Item item;
+  final int count;
+
+  @override
+  State<ConfirmItemTile> createState() => _ConfirmItemTileState();
+}
+
+class _ConfirmItemTileState extends State<ConfirmItemTile> {
+  late CreateOrderProvider provider;
+  late Item item;
+  late int count;
+
+  @override
+  Widget build(BuildContext context) {
+    item = widget.item;
+    provider = widget.provider;
+    count = widget.count;
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 1,
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: Container(
+                clipBehavior: Clip.hardEdge,
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(12)),
+                child: Image.network(
+                  item.displayImage,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            flex: 3,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  item.name,
+                  overflow: TextOverflow.fade,
+                  maxLines: 1,
+                  softWrap: false,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  '\$${(item.price * count).toStringAsFixed(2)}',
+                  maxLines: 1,
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            flex: 1,
+            child: Column(
+              children: [
+                Container(
+                  width: 32,
+                  height: 32,
+                  clipBehavior: Clip.hardEdge,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: InkWell(
+                    onTap: () {
+                      setState(() => count++);
+                      provider.addItem(item);
+                    },
+                    child: Center(
+                      child: Text(
+                        '+',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColorDark,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  width: 32,
+                  height: 32,
+                  decoration: BoxDecoration(
+                    color: AppColors.cadetBlueCrayola.withAlpha(50),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Center(
+                    child: Text(count.toString()),
+                  ),
+                ),
+                Container(
+                  width: 32,
+                  height: 32,
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: InkWell(
+                    onTap: () {
+                      provider.removeItem(item);
+                    },
+                    child: Center(
+                      child: Text(
+                        '-',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColorDark,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

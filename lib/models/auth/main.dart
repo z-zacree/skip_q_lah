@@ -126,4 +126,8 @@ class AuthenticationService {
       return {'code': e.code};
     }
   }
+
+  void resetPassword({required String email}) {
+    FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+  }
 }

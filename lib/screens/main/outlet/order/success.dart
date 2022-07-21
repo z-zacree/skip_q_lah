@@ -58,7 +58,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                         color: Theme.of(context).primaryColor,
                       ),
                       child: Text(
-                        '# ${userOrder.orderNumberString}',
+                        '# ${userOrder.identityNumber}',
                         style: TextStyle(
                             color: Theme.of(context).primaryColorLight,
                             fontSize: 24,

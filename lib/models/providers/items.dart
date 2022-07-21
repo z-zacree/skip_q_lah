@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:skip_q_lah/models/constants.dart';
+import 'package:skip_q_lah/models/enums.dart';
 import 'package:skip_q_lah/models/firestore/collections/item.dart';
 import 'package:skip_q_lah/models/firestore/collections/outlet.dart';
 

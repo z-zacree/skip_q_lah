@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
-import 'package:skip_q_lah/models/constants.dart';
+import 'package:skip_q_lah/models/enums.dart';
 import 'package:skip_q_lah/models/firestore/collections/outlet.dart';
 import 'package:skip_q_lah/models/providers/items.dart';
 import 'package:skip_q_lah/models/providers/order.dart';
@@ -163,14 +163,47 @@ class _OutletMenuState extends State<OutletMenu> {
               left: 20,
               right: 20,
               child: ElevatedButton(
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: ((context) {
-                      return const ConfirmOrderPage();
-                    }),
-                  ),
-                ),
+                onPressed: orderProvider.type == ServiceType.pickup
+                    ? () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: ((context) {
+                              return const ConfirmOrderPage();
+                            }),
+                          ),
+                        )
+                    : () => showCustomModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            void confirmTableNumber(String tableNumber) {
+                              Navigator.pop(context);
+                              // TODO: NAVIGATE AND STUFF
+                            }
+
+                            return TableNumber(function: confirmTableNumber);
+                          },
+                          containerWidget: (
+                            BuildContext context,
+                            Animation<double> animation,
+                            Widget child,
+                          ) {
+                            return SafeArea(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 32,
+                                ),
+                                child: Center(
+                                  child: Material(
+                                    clipBehavior: Clip.antiAlias,
+                                    borderRadius: BorderRadius.circular(12),
+                                    color: Theme.of(context).backgroundColor,
+                                    child: child,
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
                 child: const Text('Confirm Order'),
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
@@ -204,6 +237,73 @@ Widget mainCategoryItems(String catName, List<OutletItem> itemList) {
       const SizedBox(height: 24)
     ],
   );
+}
+
+class TableNumber extends StatefulWidget {
+  const TableNumber({Key? key, required this.function}) : super(key: key);
+
+  final void Function(String) function;
+
+  @override
+  State<TableNumber> createState() => _TableNumberState();
+}
+
+class _TableNumberState extends State<TableNumber> {
+  final GlobalKey<FormState> formkey = GlobalKey<FormState>();
+  final TextEditingController controller = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: formkey,
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextFormField(
+              keyboardType: TextInputType.number,
+              controller: controller,
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.all(12),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide:
+                      BorderSide(color: Theme.of(context).primaryColorDark),
+                ),
+                labelText: 'Table Number',
+                labelStyle: TextStyle(
+                  color: Theme.of(context).primaryColorDark,
+                ),
+              ),
+              validator: (String? value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Please enter a valid table number';
+                }
+                if (!RegExp("[0-9]").hasMatch(value)) {
+                  return 'Please enter a valid table number';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 24),
+            PrimaryButton(
+              child: const Text('Confirm Table Number'),
+              onPressed: () {
+                if (formkey.currentState!.validate()) {
+                  widget.function(controller.text);
+                }
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 Widget buildFilterMenu(BuildContext context, ItemsProvider itemsProvider) {

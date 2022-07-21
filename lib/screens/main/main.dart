@@ -3,8 +3,7 @@ import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:skip_q_lah/screens/main/home/main.dart';
 import 'package:skip_q_lah/screens/main/order/main.dart';
 import 'package:skip_q_lah/screens/main/outlet/main.dart';
-import 'package:skip_q_lah/screens/main/profile/main.dart';
-import 'package:skip_q_lah/screens/main/settings/main.dart';
+import 'package:skip_q_lah/widgets/bottom_nav.dart';
 
 class MainHomePage extends StatefulWidget {
   const MainHomePage({Key? key, this.initIndex = 0}) : super(key: key);
@@ -43,7 +42,7 @@ class _MainHomePageState extends State<MainHomePage> {
             OrderListPage(),
           ],
         ),
-        bottomNavigationBar: SalomonBottomBar(
+        bottomNavigationBar: BtmBar(
           onTap: (int index) {
             if (index != pageIndex) {
               _pageController.animateToPage(

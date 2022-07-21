@@ -180,27 +180,29 @@ class _MainAuthPageState extends State<MainAuthPage> {
             FadeIn(
               duration: const Duration(milliseconds: 400),
               curve: Curves.easeInOut,
-              child: Text.rich(
-                TextSpan(
-                  children: [
-                    const TextSpan(text: 'Haven\'t created an account? '),
-                    TextSpan(
-                      text: 'Sign up now!',
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                      ),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () => Navigator.push(
-                              context,
-                              SwipeablePageRoute(
-                                canOnlySwipeFromEdge: true,
-                                builder: (context) {
-                                  return const SignUpPage();
-                                },
+              child: Center(
+                child: Text.rich(
+                  TextSpan(
+                    children: [
+                      const TextSpan(text: 'Haven\'t created an account? '),
+                      TextSpan(
+                        text: 'Sign up now!',
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                        ),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () => Navigator.push(
+                                context,
+                                SwipeablePageRoute(
+                                  canOnlySwipeFromEdge: true,
+                                  builder: (context) {
+                                    return const SignUpPage();
+                                  },
+                                ),
                               ),
-                            ),
-                    )
-                  ],
+                      )
+                    ],
+                  ),
                 ),
               ),
             )

@@ -1,3 +1,5 @@
+import 'package:flutter/gestures.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:skip_q_lah/models/auth/main.dart';
 import 'package:skip_q_lah/screens/main/main.dart';
 import 'package:skip_q_lah/widgets/reusable_widgets.dart';
@@ -92,9 +94,104 @@ class _SignInPageState extends State<SignInPage> {
                   }
                 },
                 child: const Text('Sign in'),
-              )
+              ),
+              const SizedBox(height: 12),
+              Align(
+                alignment: Alignment.topRight,
+                child: Text.rich(
+                  TextSpan(
+                    text: 'Forgot your password?',
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () => showCustomModalBottomSheet(
+                            context: context,
+                            builder: (context) => const ResetPassword(),
+                            containerWidget: (
+                              BuildContext context,
+                              Animation<double> animation,
+                              Widget child,
+                            ) {
+                              return SafeArea(
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                    left: 32,
+                                    right: 32,
+                                    bottom: MediaQuery.of(context)
+                                        .viewInsets
+                                        .bottom,
+                                  ),
+                                  child: Center(
+                                    child: Material(
+                                      clipBehavior: Clip.antiAlias,
+                                      borderRadius: BorderRadius.circular(12),
+                                      child: child,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                  ),
+                ),
+              ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class ResetPassword extends StatefulWidget {
+  const ResetPassword({Key? key}) : super(key: key);
+
+  @override
+  State<ResetPassword> createState() => _ResetPasswordState();
+}
+
+class _ResetPasswordState extends State<ResetPassword> {
+  TextEditingController resetEmail = TextEditingController();
+  final GlobalKey<FormState> _resetForm = GlobalKey<FormState>();
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _resetForm,
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('Forgot password'),
+            const SizedBox(height: 24),
+            RoundedOutlineInput(
+              label: 'Email',
+              validator: (String? value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Please enter a valid Email';
+                }
+                if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
+                    .hasMatch(value)) {
+                  return 'Please enter a valid Email';
+                }
+                return null;
+              },
+              controller: resetEmail,
+            ),
+            const SizedBox(height: 24),
+            PrimaryButton(
+                child: const Text('Reset password'),
+                onPressed: () {
+                  if (_resetForm.currentState!.validate()) {
+                    AuthenticationService().resetPassword(
+                      email: resetEmail.text,
+                    );
+                    Navigator.pop(context);
+                  }
+                }),
+          ],
         ),
       ),
     );

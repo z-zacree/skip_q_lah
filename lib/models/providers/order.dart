@@ -6,11 +6,13 @@ import 'package:skip_q_lah/models/firestore/collections/item.dart';
 import 'package:skip_q_lah/models/firestore/collections/order.dart';
 import 'package:skip_q_lah/models/firestore/collections/outlet.dart';
 import 'package:skip_q_lah/models/firestore/main.dart';
+import 'package:skip_q_lah/models/enums.dart';
 
 class CreateOrderProvider extends ChangeNotifier {
   Outlet? outlet;
   List<Item> items = [];
-  OrderMode mode = OrderMode.takingAway;
+  OrderMode mode = OrderMode.takeaway;
+  ServiceType type = ServiceType.pickup;
   PaymentMethod method = PaymentMethod.cash;
 
   Future<UserOrder> pendOrder() async {
@@ -56,7 +58,7 @@ class CreateOrderProvider extends ChangeNotifier {
     if (this.outlet != outlet) {
       this.outlet = outlet;
       items = [];
-      mode = OrderMode.takingAway;
+      mode = OrderMode.takeaway;
       method = PaymentMethod.cash;
     }
 

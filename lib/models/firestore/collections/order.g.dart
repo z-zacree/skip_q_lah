@@ -9,7 +9,7 @@ part of 'order.dart';
 UserOrder _$UserOrderFromJson(Map<String, dynamic> json) => UserOrder(
       id: json['id'] as String,
       userId: json['user_id'] as String,
-      orderNumber: json['order_number'] as int,
+      identity: Identity.fromJson(json['identity'] as Map<String, dynamic>),
       orderMode: $enumDecode(_$OrderModeEnumMap, json['order_mode']),
       status: $enumDecode(_$OrderStatusEnumMap, json['status']),
       paymentMethod:
@@ -23,7 +23,7 @@ UserOrder _$UserOrderFromJson(Map<String, dynamic> json) => UserOrder(
 Map<String, dynamic> _$UserOrderToJson(UserOrder instance) => <String, dynamic>{
       'id': instance.id,
       'user_id': instance.userId,
-      'order_number': instance.orderNumber,
+      'identity': instance.identity.toJson(),
       'order_mode': _$OrderModeEnumMap[instance.orderMode],
       'status': _$OrderStatusEnumMap[instance.status],
       'payment_method': _$PaymentMethodEnumMap[instance.paymentMethod],
@@ -33,7 +33,7 @@ Map<String, dynamic> _$UserOrderToJson(UserOrder instance) => <String, dynamic>{
 
 const _$OrderModeEnumMap = {
   OrderMode.eatingIn: 'eating_in',
-  OrderMode.takingAway: 'taking_away',
+  OrderMode.takeaway: 'takeaway',
 };
 
 const _$OrderStatusEnumMap = {
@@ -46,4 +46,20 @@ const _$PaymentMethodEnumMap = {
   PaymentMethod.cash: 'cash',
   PaymentMethod.cardDetails: 'card_details',
   PaymentMethod.googlePay: 'google_pay',
+};
+
+Identity _$IdentityFromJson(Map<String, dynamic> json) => Identity(
+      number: json['number'] as int,
+      type: $enumDecode(_$ServiceTypeEnumMap, json['type']),
+    );
+
+Map<String, dynamic> _$IdentityToJson(Identity instance) => <String, dynamic>{
+      'number': instance.number,
+      'type': _$ServiceTypeEnumMap[instance.type],
+    };
+
+const _$ServiceTypeEnumMap = {
+  ServiceType.notAvailable: 'not_available',
+  ServiceType.pickup: 'pickup',
+  ServiceType.tableDelivery: 'table_delivery',
 };

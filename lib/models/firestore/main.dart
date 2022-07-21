@@ -17,36 +17,47 @@ class FirestoreService {
     QuerySnapshot<JsonResponse> qShot = await fs.collection("outlets").get();
 
     for (var doc in qShot.docs) {
-      String placeID = doc.get('address')['place_id'];
+      String placeID = doc.get('place_id');
       String url =
           'https://maps.googleapis.com/maps/api/place/details/json?placeid=$placeID&key=$apiKey';
 
       var response = await http.post(Uri.parse(url));
       var result = convert.jsonDecode(response.body);
-      JsonResponse latLng = {
-        'latitude': result['result']['geometry']['location']['lat'],
-        'longtitude': result['result']['geometry']['location']['lng'],
+
+      JsonResponse additionalData = {
+        'id': doc.id,
+        'location': {
+          'latitude': result['result']['geometry']['location']['lat'],
+          'longitude': result['result']['geometry']['location']['lng'],
+        },
+        'address': result['result']['formatted_address'],
       };
-      outletList.add(Outlet.fromFire(doc.id, latLng, doc.data()));
+
+      outletList.add(Outlet.fromFire(additionalData, doc.data()));
     }
     return outletList;
   }
 
   Future<Outlet> getOutlet(DocumentReference<JsonResponse> outletRef) async {
-    DocumentSnapshot<JsonResponse> outletDoc = await outletRef.get();
+    DocumentSnapshot<JsonResponse> doc = await outletRef.get();
 
-    String placeID = outletDoc.get('address')['place_id'];
+    String placeID = doc.get('place_id');
     String url =
         'https://maps.googleapis.com/maps/api/place/details/json?placeid=$placeID&key=$apiKey';
 
     var response = await http.post(Uri.parse(url));
     var result = convert.jsonDecode(response.body);
-    JsonResponse latLng = {
-      'latitude': result['result']['geometry']['location']['lat'],
-      'longtitude': result['result']['geometry']['location']['lng'],
+
+    JsonResponse additionalData = {
+      'id': doc.id,
+      'location': {
+        'latitude': result['result']['geometry']['location']['lat'],
+        'longitude': result['result']['geometry']['location']['lng'],
+      },
+      'address': result['result']['formatted_address'],
     };
 
-    return Outlet.fromFire(outletDoc.id, latLng, outletDoc.data()!);
+    return Outlet.fromFire(additionalData, doc.data()!);
   }
 
   void setUserDetails({required String uid, required JsonResponse data}) {

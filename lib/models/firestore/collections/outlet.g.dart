@@ -14,11 +14,14 @@ Outlet _$OutletFromJson(Map<String, dynamic> json) => Outlet(
       description: json['description'] as String,
       isOpen: json['is_open'] as bool,
       openingHours: (json['opening_hours'] as List<dynamic>)
-          .map((e) => Period.fromJson(e as Map<String, dynamic>))
+          .map((e) =>
+              const PeriodSerializer().fromJson(e as Map<String, dynamic>))
           .toList(),
-      address: Address.fromJson(json['address'] as Map<String, dynamic>),
-      latLng: const LatLngSerializer()
-          .fromJson(json['lat_lng'] as Map<String, dynamic>),
+      location: const LatLngSerializer()
+          .fromJson(json['location'] as Map<String, dynamic>),
+      address: json['address'] as String,
+      eatingInType: $enumDecode(_$ServiceTypeEnumMap, json['eating_in_type']),
+      takeawayType: $enumDecode(_$ServiceTypeEnumMap, json['takeaway_type']),
     );
 
 Map<String, dynamic> _$OutletToJson(Outlet instance) => <String, dynamic>{
@@ -27,44 +30,29 @@ Map<String, dynamic> _$OutletToJson(Outlet instance) => <String, dynamic>{
       'contact_number': instance.contactNumber,
       'display_image': instance.displayImage,
       'description': instance.description,
+      'address': instance.address,
       'is_open': instance.isOpen,
-      'opening_hours': instance.openingHours.map((e) => e.toJson()).toList(),
-      'address': instance.address.toJson(),
-      'lat_lng': const LatLngSerializer().toJson(instance.latLng),
+      'opening_hours':
+          instance.openingHours.map(const PeriodSerializer().toJson).toList(),
+      'takeaway_type': _$ServiceTypeEnumMap[instance.takeawayType],
+      'eating_in_type': _$ServiceTypeEnumMap[instance.eatingInType],
+      'location': const LatLngSerializer().toJson(instance.location),
     };
 
+const _$ServiceTypeEnumMap = {
+  ServiceType.notAvailable: 'not_available',
+  ServiceType.pickup: 'pickup',
+  ServiceType.tableDelivery: 'table_delivery',
+};
+
 Period _$PeriodFromJson(Map<String, dynamic> json) => Period(
-      open: Timing.fromJson(json['open'] as Map<String, dynamic>),
-      close: Timing.fromJson(json['close'] as Map<String, dynamic>),
+      isOpen: json['is_open'] as bool? ?? true,
+      open: DateTime.parse(json['open'] as String),
+      close: DateTime.parse(json['close'] as String),
     );
 
 Map<String, dynamic> _$PeriodToJson(Period instance) => <String, dynamic>{
-      'open': instance.open.toJson(),
-      'close': instance.close.toJson(),
-    };
-
-Timing _$TimingFromJson(Map<String, dynamic> json) => Timing(
-      day: json['day'] as int,
-      time: json['time'] as String,
-    );
-
-Map<String, dynamic> _$TimingToJson(Timing instance) => <String, dynamic>{
-      'day': instance.day,
-      'time': instance.time,
-    };
-
-Address _$AddressFromJson(Map<String, dynamic> json) => Address(
-      full: json['full'] as String,
-      main: json['main'] as String,
-      sub: json['sub'] as String,
-      placeId: json['place_id'] as String,
-      postalCode: json['postal_code'] as String,
-    );
-
-Map<String, dynamic> _$AddressToJson(Address instance) => <String, dynamic>{
-      'full': instance.full,
-      'main': instance.main,
-      'sub': instance.sub,
-      'postal_code': instance.postalCode,
-      'place_id': instance.placeId,
+      'is_open': instance.isOpen,
+      'open': instance.open.toIso8601String(),
+      'close': instance.close.toIso8601String(),
     };

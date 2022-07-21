@@ -41,20 +41,34 @@ class PanelWidget extends StatelessWidget {
             const SizedBox(height: 24),
             panelText(
               header: 'Address',
-              body: '''
-${outlet.address.main}, ${outlet.address.sub}
-${outlet.address.postalCode}''',
+              body: outlet.address,
             ),
             const SizedBox(height: 24),
             panelText(header: 'Contact', body: outlet.contactNumber),
             const SizedBox(height: 24),
             const TextSubHeader('Opening Hours'),
             const SizedBox(height: 8),
-            ...outlet.openingHours.asMap().entries.map((
-              MapEntry<int, Period> periodEntry,
-            ) {
-              Period period = periodEntry.value;
-              String day = days[periodEntry.key];
+            ...outlet.openingHours.map((period) {
+              String day = days[period.open.weekday - 1];
+              String setHour(int time) {
+                if (time == 0) time = 12;
+                if (time > 12) time -= 12;
+                return time.toString();
+              }
+
+              String setMinute(int time) {
+                if (time > 0) {
+                  return ':${time.toString().padLeft(2, '0')}';
+                } else {
+                  return '';
+                }
+              }
+
+              String openTime =
+                  '${setHour(period.open.hour)}${setMinute(period.open.minute)}${period.open.hour > 11 ? 'pm' : 'am'}';
+              String closeTime =
+                  '${setHour(period.close.hour)}${setMinute(period.close.minute)}${period.close.hour > 11 ? 'pm' : 'am'}';
+
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -65,12 +79,14 @@ ${outlet.address.postalCode}''',
                         width: 64,
                         child: Text(day),
                       ),
-                      Text('${period.open.time} - ${period.close.time}')
+                      Text(
+                        period.isOpen ? '$openTime - $closeTime' : 'Closed',
+                      ),
                     ],
                   ),
                 ],
               );
-            }),
+            }).toList(),
             const SizedBox(height: 24),
           ],
         ),
@@ -80,7 +96,16 @@ ${outlet.address.postalCode}''',
   }
 }
 
-List<String> days = ['Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun'];
+List<String> days = [
+  'Mon',
+  'Tues',
+  'Wed',
+  'Thurs',
+  'Fri',
+  'Sat',
+  'Sun',
+  'Test'
+];
 
 Widget panelText({required String header, required String body}) {
   return Column(
