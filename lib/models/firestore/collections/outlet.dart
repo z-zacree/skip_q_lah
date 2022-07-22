@@ -109,8 +109,8 @@ class PeriodSerializer implements JsonConverter<Period, JsonResponse> {
 
   @override
   JsonResponse toJson(Period period) => <String, dynamic>{
-        'open': period.open,
-        'close': period.close,
+        'open': Timestamp.fromDate(period.open),
+        'close': Timestamp.fromDate(period.close),
         'isOpen': period.isOpen,
       };
 }

@@ -18,7 +18,7 @@ class OrderTile extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         title: TextSubHeader('Order #${order.identityNumber}'),
         subtitle: Text(
-          order.orderModeString,
+          order.orderModeAsString,
           style: const TextStyle(
             fontSize: 14,
             color: Colors.grey,

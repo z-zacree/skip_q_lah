@@ -65,18 +65,14 @@ class FirestoreService {
   }
 
   Future<UserOrder> getUserOrder(String id, JsonResponse json) async {
-    DocumentReference<JsonResponse> outletRef = json['outlet'];
+    Outlet outlet = await FirestoreService().getOutlet(json['outlet']);
 
-    json.remove('outlet');
+    json.update('outlet', (value) => outlet.toJson());
 
-    Outlet outlet = await FirestoreService().getOutlet(outletRef);
-
-    json['outlet'] = outlet.toJson();
-
-    List<dynamic> stupidList = json['items'];
+    List<dynamic> eL = json['items'];
 
     List<DocumentReference<JsonResponse>> itemRefList =
-        stupidList.map((e) => e as DocumentReference<JsonResponse>).toList();
+        eL.map((e) => e as DocumentReference<JsonResponse>).toList();
 
     List<JsonResponse> itemList = [];
 
@@ -87,9 +83,7 @@ class FirestoreService {
       itemList.add(item.toJson());
     }
 
-    json.remove('items');
-
-    json['items'] = itemList;
+    json.update('items', (value) => itemList);
 
     return UserOrder.fromFire(id, json);
   }

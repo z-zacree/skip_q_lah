@@ -12,35 +12,44 @@ class CreateOrderProvider extends ChangeNotifier {
   Outlet? outlet;
   List<Item> items = [];
   OrderMode mode = OrderMode.takeaway;
-  ServiceType type = ServiceType.pickup;
+  ServiceType type = ServiceType.notAvailable;
   PaymentMethod method = PaymentMethod.cash;
+  int number = -1;
 
   Future<UserOrder> pendOrder() async {
     FirebaseFirestore fs = FirebaseFirestore.instance;
-    QuerySnapshot querySnapshot = await fs
-        .collection('orders')
-        .where(
-          'outlet',
-          isEqualTo: fs.collection('outlets').doc(outlet?.id),
-        )
-        .where('status', isNotEqualTo: 'completed')
-        .get();
 
-    int orderNumber = querySnapshot.size + 1;
+    if (type == ServiceType.pickup) {
+      QuerySnapshot querySnapshot = await fs
+          .collection('orders')
+          .where(
+            'outlet',
+            isEqualTo: fs.collection('outlets').doc(outlet?.id),
+          )
+          .where('status', isNotEqualTo: 'completed')
+          .get();
+
+      number = querySnapshot.size + 1;
+    }
+
+    List<DocumentReference<JsonResponse>> itemRefs = items
+        .map(
+          (e) => FirebaseFirestore.instance.collection('items').doc(e.id),
+        )
+        .toList();
 
     JsonResponse order = {
       'user_id': FirebaseAuth.instance.currentUser!.uid,
-      'items': items
-          .map(
-            (e) => FirebaseFirestore.instance.collection('items').doc(e.id),
-          )
-          .toList(),
+      'identity': {
+        'number': number,
+        'type': $ServiceTypeEnumMap[type],
+      },
+      'order_mode': $OrderModeEnumMap[mode],
+      'status': $OrderStatusEnumMap[OrderStatus.preparing],
+      'payment_method': $PaymentMethodEnumMap[method],
+      'items': itemRefs,
       'outlet':
           FirebaseFirestore.instance.collection('outlets').doc(outlet?.id),
-      'order_number': orderNumber,
-      'order_mode': $OrderModeEnumMap[mode],
-      'payment_method': $PaymentMethodEnumMap[method],
-      'status': $OrderStatusEnumMap[OrderStatus.preparing],
     };
 
     DocumentReference<JsonResponse> docRef =
@@ -60,6 +69,8 @@ class CreateOrderProvider extends ChangeNotifier {
       items = [];
       mode = OrderMode.takeaway;
       method = PaymentMethod.cash;
+      type = ServiceType.notAvailable;
+      number = -1;
     }
 
     notifyListeners();
@@ -72,7 +83,7 @@ class CreateOrderProvider extends ChangeNotifier {
   }
 
   void removeItem(Item item) {
-    items.remove(item);
+    items.removeWhere((e) => e == item);
 
     sortItems();
   }

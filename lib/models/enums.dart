@@ -29,6 +29,12 @@ final $OrderModeEnumMap = {
 
 final $PaymentMethodEnumMap = {
   PaymentMethod.cash: 'cash',
-  PaymentMethod.cardDetails: 'cardDetails',
-  PaymentMethod.googlePay: 'googlePay',
+  PaymentMethod.cardDetails: 'card_details',
+  PaymentMethod.googlePay: 'google_pay',
+};
+
+final $ServiceTypeEnumMap = {
+  ServiceType.notAvailable: 'not_available',
+  ServiceType.pickup: 'pickup',
+  ServiceType.tableDelivery: 'table_delivery',
 };

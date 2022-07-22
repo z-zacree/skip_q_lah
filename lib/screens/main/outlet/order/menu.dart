@@ -177,7 +177,15 @@ class _OutletMenuState extends State<OutletMenu> {
                           builder: (context) {
                             void confirmTableNumber(String tableNumber) {
                               Navigator.pop(context);
-                              // TODO: NAVIGATE AND STUFF
+                              orderProvider.number = int.parse(tableNumber);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return const ConfirmOrderPage();
+                                  },
+                                ),
+                              );
                             }
 
                             return TableNumber(function: confirmTableNumber);

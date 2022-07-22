@@ -21,10 +21,10 @@ class News {
   factory News.fromJson(JsonResponse json) => _$NewsFromJson(json);
 
   factory News.fromFire(JsonResponse json) {
-    Timestamp timestamp = json['uploaded_at'];
-
-    json.remove('uploaded_at');
-    json['uploaded_at'] = timestamp.toDate().toString();
+    json.update(
+      'uploaded_at',
+      (value) => (json['uploaded_at'] as Timestamp).toDate().toString(),
+    );
     return News.fromJson(json);
   }
 

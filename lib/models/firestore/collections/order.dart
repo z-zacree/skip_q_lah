@@ -42,7 +42,7 @@ class UserOrder {
 
   ServiceType get identityType => identity.type;
 
-  String get orderModeString {
+  String get orderModeAsString {
     switch (orderMode) {
       case OrderMode.eatingIn:
         return 'Eating in';
