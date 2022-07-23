@@ -49,12 +49,14 @@ const _$PaymentMethodEnumMap = {
 };
 
 Identity _$IdentityFromJson(Map<String, dynamic> json) => Identity(
-      number: json['number'] as int,
+      orderNumber: json['order_number'] as int,
       type: $enumDecode(_$ServiceTypeEnumMap, json['type']),
+      tableNumber: json['table_number'] as int?,
     );
 
 Map<String, dynamic> _$IdentityToJson(Identity instance) => <String, dynamic>{
-      'number': instance.number,
+      'order_number': instance.orderNumber,
+      'table_number': instance.tableNumber,
       'type': _$ServiceTypeEnumMap[instance.type],
     };
 

@@ -31,8 +31,11 @@ class OrderTile extends StatelessWidget {
         onTap: () {
           Navigator.push(
             context,
-            SwipeablePageRoute(
-              builder: (context) => OrderDetail(order: order),
+            MaterialPageRoute(
+              builder: (context) => OrderDetails(
+                order: order,
+                callback: () => Navigator.pop(context),
+              ),
             ),
           );
         },

@@ -38,7 +38,7 @@ class UserOrder {
     return UserOrder.fromJson(json);
   }
 
-  String get identityNumber => identity.number.toString().padLeft(3, '0');
+  String get identityNumber => identity.orderNumber.toString().padLeft(3, '0');
 
   ServiceType get identityType => identity.type;
 
@@ -62,16 +62,28 @@ class UserOrder {
 
     return itemMap.entries.toList();
   }
+
+  double getTotalPrice() {
+    double totalPrice = 0;
+
+    for (Item item in items) {
+      totalPrice += item.price;
+    }
+
+    return totalPrice;
+  }
 }
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
 class Identity {
-  final int number;
+  final int orderNumber;
+  int? tableNumber;
   final ServiceType type;
 
-  const Identity({
-    required this.number,
+  Identity({
+    required this.orderNumber,
     required this.type,
+    this.tableNumber,
   });
 
   JsonResponse toJson() => _$IdentityToJson(this);

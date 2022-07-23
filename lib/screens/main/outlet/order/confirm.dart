@@ -5,8 +5,10 @@ import 'package:provider/provider.dart';
 import 'package:skip_q_lah/models/constants.dart';
 import 'package:skip_q_lah/models/firestore/collections/item.dart';
 import 'package:skip_q_lah/models/providers/order.dart';
-import 'package:skip_q_lah/screens/main/outlet/order/success.dart';
+import 'package:skip_q_lah/screens/main/order/details.dart';
 import 'package:skip_q_lah/screens/main/outlet/change_location.dart';
+import 'package:skip_q_lah/screens/main/outlet/listing.dart';
+import 'package:skip_q_lah/screens/main/outlet/main.dart';
 import 'package:skip_q_lah/widgets/reusable_widgets.dart';
 
 class ConfirmOrderPage extends StatefulWidget {
@@ -183,7 +185,17 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(builder: (context) {
-                                return OrderDetails(userOrder: value);
+                                return OrderDetails(
+                                  order: value,
+                                  callback: () => Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const OutletListing(),
+                                    ),
+                                    (route) => false,
+                                  ),
+                                );
                               }),
                             );
                           });

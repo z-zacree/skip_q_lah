@@ -14,23 +14,21 @@ class CreateOrderProvider extends ChangeNotifier {
   OrderMode mode = OrderMode.takeaway;
   ServiceType type = ServiceType.notAvailable;
   PaymentMethod method = PaymentMethod.cash;
-  int number = -1;
+  int tableNumber = -1;
 
   Future<UserOrder> pendOrder() async {
     FirebaseFirestore fs = FirebaseFirestore.instance;
 
-    if (type == ServiceType.pickup) {
-      QuerySnapshot querySnapshot = await fs
-          .collection('orders')
-          .where(
-            'outlet',
-            isEqualTo: fs.collection('outlets').doc(outlet?.id),
-          )
-          .where('status', isNotEqualTo: 'completed')
-          .get();
+    QuerySnapshot querySnapshot = await fs
+        .collection('orders')
+        .where(
+          'outlet',
+          isEqualTo: fs.collection('outlets').doc(outlet?.id),
+        )
+        .where('status', isNotEqualTo: 'completed')
+        .get();
 
-      number = querySnapshot.size + 1;
-    }
+    int orderNumber = querySnapshot.size + 1;
 
     List<DocumentReference<JsonResponse>> itemRefs = items
         .map(
@@ -41,7 +39,8 @@ class CreateOrderProvider extends ChangeNotifier {
     JsonResponse order = {
       'user_id': FirebaseAuth.instance.currentUser!.uid,
       'identity': {
-        'number': number,
+        'order_number': orderNumber,
+        'table_number': tableNumber,
         'type': $ServiceTypeEnumMap[type],
       },
       'order_mode': $OrderModeEnumMap[mode],
@@ -70,7 +69,7 @@ class CreateOrderProvider extends ChangeNotifier {
       mode = OrderMode.takeaway;
       method = PaymentMethod.cash;
       type = ServiceType.notAvailable;
-      number = -1;
+      tableNumber = -1;
     }
 
     notifyListeners();
